@@ -9,10 +9,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using HelpDeskApi.Models.DTOs.Requests;
 
 namespace HelpDeskApi.Controllers
 {
-     [Route("api/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class CaseController : ControllerBase
@@ -24,12 +25,12 @@ namespace HelpDeskApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> List()
+        public async Task<ActionResult> List([FromQuery] CaseFilter  filter)
         {
             try
             {
                                  
-                var data = await (from c in _context.HD_Case
+                var query =  (from c in _context.HD_Case
                             select new
                             {
                                 CaseID = c.CaseID,
@@ -38,9 +39,43 @@ namespace HelpDeskApi.Controllers
                                 PriorityID = c.PriorityID,
                                 StatusID = c.StatusID
                                
-                            }).ToListAsync();
+                            });
+
+                 var DbF = Microsoft.EntityFrameworkCore.EF.Functions;
+               
+                if (filter.caseTypeID>0)
+                {
+                   query = query.Where(q => q.CaseTypeID == filter.caseTypeID);
+                }
+                
+                /*
+                if (!String.IsNullOrEmpty(filter.textSearch))
+                {
+                    query = query.Where(q => DbF.Like(q.Name, "%" + filter.textSearch + "%"));
+                }
+                */
+
+                query = query.OrderBy(q => q.StatusID);
+
+                 switch (filter.sortOrder)
+                {
+                    case "priority":
+                        query = query.OrderBy(q => q.PriorityID);
+                        break;
+                    case "priority_desc":
+                        query = query.OrderByDescending(q => q.PriorityID);
+                        break;
+                    default:
+                        query = query = query.OrderBy(q => q.CaseID);
+                        break;
+                }
+
+                int totalItems = query.Count();
+                var data = await query.Skip((filter.pageNumber - 1) * filter.pageSize).Take(filter.pageSize).ToListAsync();
+
                 return Ok(new
                 {
+                    totalItems = totalItems,
                     data = data,
                     isSuccess = true
                 });
