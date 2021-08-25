@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\PCF120721\\helpdeskapi\\HelpDeskApi.csproj": {}
+    "c:\\PCF120721\\helpdeskapi\\HelpDeskApi.csproj": {}
   },
   "projects": {
-    "C:\\PCF120721\\helpdeskapi\\HelpDeskApi.csproj": {
+    "c:\\PCF120721\\helpdeskapi\\HelpDeskApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\PCF120721\\helpdeskapi\\HelpDeskApi.csproj",
+        "projectUniqueName": "c:\\PCF120721\\helpdeskapi\\HelpDeskApi.csproj",
         "projectName": "HelpDeskApi",
-        "projectPath": "C:\\PCF120721\\helpdeskapi\\HelpDeskApi.csproj",
+        "projectPath": "c:\\PCF120721\\helpdeskapi\\HelpDeskApi.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "C:\\PCF120721\\helpdeskapi\\obj\\",
+        "outputPath": "c:\\PCF120721\\helpdeskapi\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"

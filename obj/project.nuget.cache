@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "DtB7+9CmxfULC51slwyUuFKChbVxv0Q5ubilgTrrC0FywUq5qSA5TWvvAt5IISrSivbzkPH2xDOOLRd9QHlwXg==",
+  "dgSpecHash": "P5jDAH7PmzfVR4sp3Y3pjIn5Tfb7LG16duZ2DDxdxce90fIBaNoAqXTWiqR2k7S4QDX2iUm3V5btF6eRMDUsKQ==",
   "success": true,
-  "projectFilePath": "C:\\PCF120721\\helpdeskapi\\HelpDeskApi.csproj",
+  "projectFilePath": "c:\\PCF120721\\helpdeskapi\\HelpDeskApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\User\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\5.0.3\\microsoft.aspnetcore.authentication.jwtbearer.5.0.3.nupkg.sha512",
