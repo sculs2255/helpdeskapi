@@ -9,7 +9,7 @@ namespace HelpDeskApi.Data
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
         public DbSet<Case> HD_Case { get; set; }   
-        public DbSet<Branch> Branch { get; set; } 
-      
+        public DbSet<Status> Status { get; set; }   
+       
     }
 }
