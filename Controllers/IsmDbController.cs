@@ -16,49 +16,65 @@ namespace HelpDeskApi.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class BranchController : ControllerBase
+    public class IsmDbController : ControllerBase
     {
         private readonly DataContext _context;
-        public BranchController(DataContext context)
+        public IsmDbController(DataContext context)
         {
             _context = context;
         }
 
         [HttpGet]
-        public async Task<ActionResult> List([FromQuery] BranchFilter  filter)
+        public async Task<ActionResult> List([FromQuery] IsmDbFilter filter)
         {
             try
             {
-                                 
-                var query =  (from c in _context.Branch
-                            select new
-                            {
-                                BranchID = c.BranchID,
-                                CountryID = c.CountryID,
-                                BranchName = c.BranchName,
-                                
-                            });
-
-                 var DbF = Microsoft.EntityFrameworkCore.EF.Functions;
-               
-                if (filter.BranchID>0)
-                {
-                   query = query.Where(q => q.BranchID == filter.BranchID);
-                }
                 
-                /*
-                if (!String.IsNullOrEmpty(filter.textSearch))
+
+                var query = (from s in _context.IsmDb
+                             select new
+                             {
+                                 IsmID = s.IsmID,
+                                 IsmName = s.IsmName
+
+                             });
+
+                var DbF = Microsoft.EntityFrameworkCore.EF.Functions;
+
+                if (filter.IsmID > 0)
                 {
-                    query = query.Where(q => DbF.Like(q.Name, "%" + filter.textSearch + "%"));
+                    query = query.Where(q => q.IsmID == filter.IsmID);
                 }
-                */
 
-                query = query.OrderBy(q => q.CountryID);
+                /*
+               if (!String.IsNullOrEmpty(filter.textSearch))
+               {
+                   query = query.Where(q => DbF.Like(q.Name, "%" + filter.textSearch + "%"));
+               }
+               */
 
-                 switch (filter.sortOrder)
+             
+                switch (filter.sortOrder)
                 {
-                    case "priority":
-                        query = query.OrderBy(q => q.BranchName);
+                    case "IsmName":
+                        query = query.OrderBy(q => q.IsmName);
+                        Console.WriteLine("1");
+                        break;
+                    case "IsmName_desc":
+                        query = query.OrderByDescending(q => q.IsmName);
+                        Console.WriteLine("2");
+                        break;
+                    case "IsmID":
+                        query = query.OrderBy(q => q.IsmID);
+                        Console.WriteLine("3");
+                        break;
+                    case "IsmID_desc":
+                        query = query.OrderByDescending(q => q.IsmID);
+                        Console.WriteLine("4");
+                        break;
+                    default:
+                        query = query.OrderBy(q => q.IsmID);
+                        Console.WriteLine("0");
                         break;
                 }
 
@@ -69,6 +85,7 @@ namespace HelpDeskApi.Controllers
                 {
                     totalItems = totalItems,
                     data = data,
+                    filter = filter,
                     isSuccess = true
                 });
             }
@@ -87,7 +104,7 @@ namespace HelpDeskApi.Controllers
         {
             try
             {
-                var existingData = await _context.Branch.FindAsync(id);
+                var existingData = await _context.IsmDb.FindAsync(id);
                 if (existingData == null)
                 {
                     return BadRequest(new
@@ -96,7 +113,7 @@ namespace HelpDeskApi.Controllers
                         isSuccess = false
                     });
                 }
-                
+
                 return Ok(new
                 {
                     data = existingData,
@@ -113,29 +130,28 @@ namespace HelpDeskApi.Controllers
                 });
             }
         }
-      
+
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] BranchRequest request)
+        public async Task<IActionResult> Update(int id, [FromBody] IsmDbRequest request)
         {
             try
-            { 
-                var existingData = await _context.Branch.FindAsync(id);
+            {
+                var existingData = await _context.IsmDb.FindAsync(id);
                 if (existingData == null)
                 {
-                      return BadRequest(new
+                    return BadRequest(new
                     {
+
                         message = "Data NotFound",
                         isSuccess = false
                     });
                 }
+                existingData.IsmID = request.IsmID;
+                existingData.IsmName = request.IsmName;
 
-                existingData.BranchID = request.BranchID;
-                existingData.CountryID = request.CountryID;
-                existingData.BranchName = request.BranchName;
-                
                 await _context.SaveChangesAsync();
-                
+
                 return Ok(new
                 {
                     isSuccess = true
@@ -152,26 +168,25 @@ namespace HelpDeskApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] BranchRequest request)
+        public async Task<IActionResult> Create([FromBody] IsmDbRequest request)
         {
-             try
-            { 
-                var temp = new Branch
+            try
+            {
+                var temp = new IsmDb
                 {
-                    BranchID = request.BranchID,
-                    CountryID = request.CountryID,
-                    BranchName = request.BranchName
+                    IsmID = request.IsmID,
+                    IsmName = request.IsmName
                 };
 
-                 _context.Branch.Add(temp);
+                _context.IsmDb.Add(temp);
                 await _context.SaveChangesAsync();
-                
-                
+
+
                 return Ok(new
                 {
                     isSuccess = true
                 });
-                
+
             }
             catch (Exception ex)
             {
@@ -183,24 +198,25 @@ namespace HelpDeskApi.Controllers
             }
         }
 
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                
-                var existingData = await _context.Branch.FindAsync(id);
+
+                var existingData = await _context.IsmDb.FindAsync(id);
 
                 if (existingData == null)
                 {
-                      return BadRequest(new
+                    return BadRequest(new
                     {
                         message = "Data NotFound",
                         isSuccess = false
                     });
                 }
 
-                _context.Branch.Remove(existingData);
+                _context.IsmDb.Remove(existingData);
                 await _context.SaveChangesAsync();
 
                 return Ok(new
@@ -208,7 +224,7 @@ namespace HelpDeskApi.Controllers
                     isSuccess = true
                 });
             }
-             catch (Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(new
                 {

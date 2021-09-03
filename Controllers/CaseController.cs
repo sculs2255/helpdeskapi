@@ -25,29 +25,29 @@ namespace HelpDeskApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> List([FromQuery] CaseFilter  filter)
+        public async Task<ActionResult> List([FromQuery] CaseFilter filter)
         {
             try
             {
-                                 
-                var query =  (from c in _context.HD_Case
-                            select new
-                            {
-                                CaseID = c.CaseID,
-                                CaseTypeID = c.CaseTypeID,
-                                CaseDate = c.CaseDate,
-                                PriorityID = c.PriorityID,
-                                StatusID = c.StatusID
-                               
-                            });
 
-                 var DbF = Microsoft.EntityFrameworkCore.EF.Functions;
-               
-                if (filter.caseTypeID>0)
+                var query = (from c in _context.HD_Case
+                             select new
+                             {
+                                 CaseID = c.CaseID,
+                                 CaseTypeID = c.CaseTypeID,
+                                 CaseDate = c.CaseDate,
+                                 PriorityID = c.PriorityID,
+                                 StatusID = c.StatusID
+
+                             });
+
+                var DbF = Microsoft.EntityFrameworkCore.EF.Functions;
+
+                if (filter.caseTypeID > 0)
                 {
-                   query = query.Where(q => q.CaseTypeID == filter.caseTypeID);
+                    query = query.Where(q => q.CaseTypeID == filter.caseTypeID);
                 }
-                
+
                 /*
                 if (!String.IsNullOrEmpty(filter.textSearch))
                 {
@@ -55,18 +55,15 @@ namespace HelpDeskApi.Controllers
                 }
                 */
 
-                query = query.OrderBy(q => q.StatusID);
 
-                 switch (filter.sortOrder)
+
+                switch (filter.sortOrder)
                 {
-                    case "priority":
+                    case "priorityID":
                         query = query.OrderBy(q => q.PriorityID);
                         break;
-                    case "priority_desc":
+                    case "priorityID_desc":
                         query = query.OrderByDescending(q => q.PriorityID);
-                        break;
-                        case "status":
-                        query = query.OrderBy(q => q.StatusID);
                         break;
                     default:
                         query = query = query.OrderBy(q => q.CaseID);
@@ -80,6 +77,7 @@ namespace HelpDeskApi.Controllers
                 {
                     totalItems = totalItems,
                     data = data,
+                    filter = filter,
                     isSuccess = true
                 });
             }
@@ -107,7 +105,7 @@ namespace HelpDeskApi.Controllers
                         isSuccess = false
                     });
                 }
-                
+
                 return Ok(new
                 {
                     data = existingData,
@@ -124,17 +122,17 @@ namespace HelpDeskApi.Controllers
                 });
             }
         }
-      
+
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] CaseRequest request)
         {
             try
-            { 
+            {
                 var existingData = await _context.HD_Case.FindAsync(id);
                 if (existingData == null)
                 {
-                      return BadRequest(new
+                    return BadRequest(new
                     {
                         message = "Data NotFound",
                         isSuccess = false
@@ -144,9 +142,9 @@ namespace HelpDeskApi.Controllers
                 existingData.CaseTypeID = request.CaseTypeID;
                 existingData.PriorityID = request.PriorityID;
                 existingData.StatusID = request.StatusID;
-                
+
                 await _context.SaveChangesAsync();
-                
+
                 return Ok(new
                 {
                     isSuccess = true
@@ -163,10 +161,10 @@ namespace HelpDeskApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CaseRequest request)
+        public async Task<IActionResult> Create([FromBody] CaseRequest request, IncidentCaseRequest request1)
         {
-             try
-            { 
+            try
+            {
                 var temp = new Case
                 {
                     CaseTypeID = request.CaseTypeID,
@@ -175,15 +173,32 @@ namespace HelpDeskApi.Controllers
                     StatusID = request.StatusID
                 };
 
-                 _context.HD_Case.Add(temp);
+                _context.HD_Case.Add(temp);
                 await _context.SaveChangesAsync();
-                
-                
+
+
+                var transCase = new IncidentCase
+                {
+                    CaseID = temp.CaseID,
+                    SystemID = request1.SystemID,
+                    ModuleID = request1.ModuleID,
+                    ProgramID = request1.ProgramID,
+                    Topic = request1.Topic,
+                    Description = request1.Description,
+                    File = request1.File,
+                    Note = request1.Note,
+                    CCMail = request1.CCMail
+                };
+
+                _context.IncidentCase.Add(transCase);
+                await _context.SaveChangesAsync();
+
                 return Ok(new
                 {
+
                     isSuccess = true
                 });
-                
+
             }
             catch (Exception ex)
             {
@@ -201,12 +216,12 @@ namespace HelpDeskApi.Controllers
         {
             try
             {
-                
+
                 var existingData = await _context.HD_Case.FindAsync(id);
 
                 if (existingData == null)
                 {
-                      return BadRequest(new
+                    return BadRequest(new
                     {
                         message = "Data NotFound",
                         isSuccess = false
@@ -221,7 +236,7 @@ namespace HelpDeskApi.Controllers
                     isSuccess = true
                 });
             }
-             catch (Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(new
                 {
