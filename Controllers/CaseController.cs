@@ -177,10 +177,13 @@ namespace HelpDeskApi.Controllers
 
                  _context.HD_Case.Add(temp);
                 await _context.SaveChangesAsync();
+
+                var CaseID = temp.CaseID;
                 
                 
                 return Ok(new
                 {
+                    CaseID = CaseID,
                     isSuccess = true
                 });
                 
