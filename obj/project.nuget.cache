@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "mPKEUGEjfCq56K1MXUwYrlmfYv+eCHjd86UDRBpma3tMivqwKLTQ1QbU7vQhlUGEv1fjikn0rS/Mk9WAnX3XKQ==",
+  "dgSpecHash": "P5jDAH7PmzfVR4sp3Y3pjIn5Tfb7LG16duZ2DDxdxce90fIBaNoAqXTWiqR2k7S4QDX2iUm3V5btF6eRMDUsKQ==",
   "success": true,
-  "projectFilePath": "D:\\Project-PCG\\VS-code-project\\helpdeskapi\\helpdeskapi\\HelpDeskApi.csproj",
+  "projectFilePath": "c:\\PCF120721\\helpdeskapi\\HelpDeskApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\sculs\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\sculs\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\5.0.3\\microsoft.aspnetcore.authentication.jwtbearer.5.0.3.nupkg.sha512",

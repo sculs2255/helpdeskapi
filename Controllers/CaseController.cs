@@ -193,9 +193,12 @@ namespace HelpDeskApi.Controllers
                 _context.IncidentCase.Add(transCase);
                 await _context.SaveChangesAsync();
 
+                var CaseID = temp.CaseID;
+                
+                
                 return Ok(new
                 {
-
+                    CaseID = CaseID,
                     isSuccess = true
                 });
 
