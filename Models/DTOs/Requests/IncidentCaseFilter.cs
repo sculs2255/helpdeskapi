@@ -3,11 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace HelpDeskApi.Models.DTOs.Requests
 {
-    public class BranchFilter : QueryStringFilter
+    public class IncidentCaseFilter : QueryStringFilter
     {
-        public int BranchID { get; set; } 
-
-        public int? CountryID {get; set;}
+        public int ICID { get; set; } 
         
     }
 }

@@ -7,7 +7,7 @@ namespace HelpDeskApi.Models
         public int ModuleID{ get; set; }
         public string  ModuleCode { get; set; } 
 
-        public int SystemID {get ; set;}
+        public int? SystemID {get ; set;}
         
     }
 }

@@ -19,46 +19,58 @@ namespace HelpDeskApi.Controllers
     public class BranchController : ControllerBase
     {
         private readonly DataContext _context;
-        public BranchController(DataContext context)
+        public  BranchController(DataContext context)
         {
             _context = context;
         }
 
         [HttpGet]
-        public async Task<ActionResult> List([FromQuery] BranchFilter  filter)
+        public async Task<ActionResult> List([FromQuery] BranchFilter filter)
         {
             try
             {
-                                 
-                var query =  (from c in _context.Branch
-                            select new
-                            {
-                                BranchID = c.BranchID,
-                                CountryID = c.CountryID,
-                                BranchName = c.BranchName,
-                                
-                            });
 
-                 var DbF = Microsoft.EntityFrameworkCore.EF.Functions;
-               
-                if (filter.BranchID>0)
+                var query = (from m in _context.Branch
+                             select new
+                             {
+                                 BranchID = m.BranchID,
+                                 BranchName= m.BranchName,
+                                 m.CountryID 
+
+                             });
+
+                var DbF = Microsoft.EntityFrameworkCore.EF.Functions;
+
+               if (filter.CountryID > 0)
                 {
-                   query = query.Where(q => q.BranchID == filter.BranchID);
+                    query = query.Where(q => q.CountryID == filter.CountryID);
                 }
-                
+
                 /*
-                if (!String.IsNullOrEmpty(filter.textSearch))
-                {
-                    query = query.Where(q => DbF.Like(q.Name, "%" + filter.textSearch + "%"));
-                }
-                */
+               if (!String.IsNullOrEmpty(filter.textSearch))
+               {
+                   query = query.Where(q => DbF.Like(q.Name, "%" + filter.textSearch + "%"));
+               }
+               */
 
-                query = query.OrderBy(q => q.CountryID);
+       
 
-                 switch (filter.sortOrder)
+                switch (filter.sortOrder)
                 {
-                    case "priority":
+                    case "BranchName":
                         query = query.OrderBy(q => q.BranchName);
+                        break;
+                    case "BranchName_desc":
+                        query = query.OrderByDescending(q => q.BranchName);
+                        break;
+                    case "BranchID":
+                        query = query.OrderBy(q => q.BranchID);
+                        break;
+                    case "BranchID_desc":
+                        query = query.OrderByDescending(q => q.BranchID);
+                        break;
+                    default:
+                        query = query = query.OrderBy(q => q.BranchName);
                         break;
                 }
 
@@ -96,7 +108,7 @@ namespace HelpDeskApi.Controllers
                         isSuccess = false
                     });
                 }
-                
+
                 return Ok(new
                 {
                     data = existingData,
@@ -113,29 +125,28 @@ namespace HelpDeskApi.Controllers
                 });
             }
         }
-      
+
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] BranchRequest request)
+        public async Task<IActionResult> Update(int id, [FromBody] BranchRequest request, int BranchName)
         {
             try
-            { 
+            {
                 var existingData = await _context.Branch.FindAsync(id);
                 if (existingData == null)
                 {
-                      return BadRequest(new
+                    return BadRequest(new
                     {
+
                         message = "Data NotFound",
                         isSuccess = false
                     });
                 }
-
                 existingData.BranchID = request.BranchID;
-                existingData.CountryID = request.CountryID;
                 existingData.BranchName = request.BranchName;
-                
+
                 await _context.SaveChangesAsync();
-                
+
                 return Ok(new
                 {
                     isSuccess = true
@@ -154,24 +165,23 @@ namespace HelpDeskApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] BranchRequest request)
         {
-             try
-            { 
+            try
+            {
                 var temp = new Branch
                 {
                     BranchID = request.BranchID,
-                    CountryID = request.CountryID,
                     BranchName = request.BranchName
                 };
 
-                 _context.Branch.Add(temp);
+                _context.Branch.Add(temp);
                 await _context.SaveChangesAsync();
-                
-                
+
+
                 return Ok(new
                 {
                     isSuccess = true
                 });
-                
+
             }
             catch (Exception ex)
             {
@@ -183,17 +193,18 @@ namespace HelpDeskApi.Controllers
             }
         }
 
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                
+
                 var existingData = await _context.Branch.FindAsync(id);
 
                 if (existingData == null)
                 {
-                      return BadRequest(new
+                    return BadRequest(new
                     {
                         message = "Data NotFound",
                         isSuccess = false
@@ -208,7 +219,7 @@ namespace HelpDeskApi.Controllers
                     isSuccess = true
                 });
             }
-             catch (Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(new
                 {

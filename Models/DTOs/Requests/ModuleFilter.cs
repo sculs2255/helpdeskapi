@@ -7,7 +7,7 @@ namespace HelpDeskApi.Models.DTOs.Requests
     {
         public int ModuleID { get; set; } 
 
-        public int SystemID {get ; set;}
+        public int? SystemID {get ; set;}
         
     }
 }

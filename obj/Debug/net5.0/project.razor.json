@@ -15617,6 +15617,12 @@
     "CSharpLanguageVersion": 900
   },
   "RootNamespace": "HelpDeskApi",
-  "Documents": [],
+  "Documents": [
+    {
+      "FilePath": "c:\\PCF120721\\helpdeskapi\\Views\\IncidentCase\\Create.cshtml",
+      "TargetPath": "Views\\IncidentCase\\Create.cshtml",
+      "FileKind": "mvc"
+    }
+  ],
   "SerializationFormat": "0.2"
 }
