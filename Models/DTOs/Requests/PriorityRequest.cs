@@ -4,10 +4,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HelpDeskApi.Models
 {
-    public class IsmDbRequest
+    public class PriorityRequest
     {    
-        public int IsmID { get; set; }
-        public string IsmName { get; set; } 
+        public int PriorityID { get; set; }
+        public string PriorityName { get; set; } 
         
     }
 }

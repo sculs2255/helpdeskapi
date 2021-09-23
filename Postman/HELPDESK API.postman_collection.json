@@ -1,0 +1,626 @@
+{
+	"info": {
+		"_postman_id": "ece1ac36-9605-4e49-8956-48eab8c090a3",
+		"name": "HELPDESK API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth User",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "admin@admin.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "hD1234#",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/AuthManagement/Login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"AuthManagement",
+								"Login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UserInfo",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjJjZTRlMzgzLTQ1MTItNGMyNi1iYzAzLTUzMjc5ZjMzZGZkNSIsImVtYWlsIjoidXNlckB1c2VyLmNvbSIsInN1YiI6InVzZXJAdXNlci5jb20iLCJqdGkiOiI0ZDQzNTJjNi1mZjVkLTQ1M2YtYTM2NS1kNzViNTA5ZWUxYTYiLCJuYmYiOjE2MjkyODQ5NzksImV4cCI6MTYyOTMyODE3OSwiaWF0IjoxNjI5Mjg0OTc5fQ.Zlusy4--r94XAxiNtCRsdt18RgAl2SzFsczIMUjdPTg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "user@user.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "hD1234#",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/Profile/UserInfo",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"Profile",
+								"UserInfo"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Case",
+			"item": [
+				{
+					"name": "List",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjJjZTRlMzgzLTQ1MTItNGMyNi1iYzAzLTUzMjc5ZjMzZGZkNSIsImVtYWlsIjoidXNlckB1c2VyLmNvbSIsInN1YiI6InVzZXJAdXNlci5jb20iLCJqdGkiOiI5OWU4ZWE4MS04Mzc1LTQ1NjItOWQxYy02MTdlNTI3MWRlMjMiLCJuYmYiOjE2MzA2NTUxNzAsImV4cCI6MTYzMDY5ODM3MCwiaWF0IjoxNjMwNjU1MTcwfQ.0tDW7MlW-wIk37hTgqq5pal-Sks_z4VdA6-70KMndJY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/Case?textSearch=&pageSize=10&pageNumber=1&caseTypeID=0&sortOrder=priority",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"Case"
+							],
+							"query": [
+								{
+									"key": "textSearch",
+									"value": ""
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								},
+								{
+									"key": "pageNumber",
+									"value": "1"
+								},
+								{
+									"key": "caseTypeID",
+									"value": "0"
+								},
+								{
+									"key": "sortOrder",
+									"value": "priority"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Detail",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjJjZTRlMzgzLTQ1MTItNGMyNi1iYzAzLTUzMjc5ZjMzZGZkNSIsImVtYWlsIjoidXNlckB1c2VyLmNvbSIsInN1YiI6InVzZXJAdXNlci5jb20iLCJqdGkiOiI5OWU4ZWE4MS04Mzc1LTQ1NjItOWQxYy02MTdlNTI3MWRlMjMiLCJuYmYiOjE2MzA2NTUxNzAsImV4cCI6MTYzMDY5ODM3MCwiaWF0IjoxNjMwNjU1MTcwfQ.0tDW7MlW-wIk37hTgqq5pal-Sks_z4VdA6-70KMndJY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/Case/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"Case",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Insert",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjJjZTRlMzgzLTQ1MTItNGMyNi1iYzAzLTUzMjc5ZjMzZGZkNSIsImVtYWlsIjoidXNlckB1c2VyLmNvbSIsInN1YiI6InVzZXJAdXNlci5jb20iLCJqdGkiOiI5OWU4ZWE4MS04Mzc1LTQ1NjItOWQxYy02MTdlNTI3MWRlMjMiLCJuYmYiOjE2MzA2NTUxNzAsImV4cCI6MTYzMDY5ODM3MCwiaWF0IjoxNjMwNjU1MTcwfQ.0tDW7MlW-wIk37hTgqq5pal-Sks_z4VdA6-70KMndJY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"caseTypeID\": 1,\r\n    \"priorityID\": 2,\r\n    \"statusID\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/Case",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"Case"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjJjZTRlMzgzLTQ1MTItNGMyNi1iYzAzLTUzMjc5ZjMzZGZkNSIsImVtYWlsIjoidXNlckB1c2VyLmNvbSIsInN1YiI6InVzZXJAdXNlci5jb20iLCJqdGkiOiI2MDdlNGEwMS04OThlLTQyYjgtODU2MS02NjM0ZDAxOTdkNzkiLCJuYmYiOjE2MjY5NTc4MjYsImV4cCI6MTYyNzAwMTAyNiwiaWF0IjoxNjI2OTU3ODI2fQ.Mbhfr04Dj1m7UJhoJVP81bLqQYJPg3uR0JxXmM79onU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"caseTypeID\": 1,\r\n    \"priorityID\": 2,\r\n    \"statusID\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/Case/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"Case",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjJjZTRlMzgzLTQ1MTItNGMyNi1iYzAzLTUzMjc5ZjMzZGZkNSIsImVtYWlsIjoidXNlckB1c2VyLmNvbSIsInN1YiI6InVzZXJAdXNlci5jb20iLCJqdGkiOiI2MDdlNGEwMS04OThlLTQyYjgtODU2MS02NjM0ZDAxOTdkNzkiLCJuYmYiOjE2MjY5NTc4MjYsImV4cCI6MTYyNzAwMTAyNiwiaWF0IjoxNjI2OTU3ODI2fQ.Mbhfr04Dj1m7UJhoJVP81bLqQYJPg3uR0JxXmM79onU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/Case/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"Case",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User Management",
+			"item": [
+				{
+					"name": "UserList",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6Ijk4NDgzOTI3LTM2ZWItNGU2ZC04N2M1LTdiNTU5M2FhOTFiZCIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwic3ViIjoiYWRtaW5AYWRtaW4uY29tIiwianRpIjoiZjRhZDI4NzctMzc1OS00NjM2LThjYWEtNjYxMzc0MGViOTVkIiwibmJmIjoxNjMxNzk2NDEzLCJleHAiOjE2MzE4Mzk2MTMsImlhdCI6MTYzMTc5NjQxM30.vCxV5y-1A7epllS9IUukNZoKbxNp0lA0AJEXZORe9pk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/User/GetUserList",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"User",
+								"GetUserList"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6Ijk4NDgzOTI3LTM2ZWItNGU2ZC04N2M1LTdiNTU5M2FhOTFiZCIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwic3ViIjoiYWRtaW5AYWRtaW4uY29tIiwianRpIjoiZjRhZDI4NzctMzc1OS00NjM2LThjYWEtNjYxMzc0MGViOTVkIiwibmJmIjoxNjMxNzk2NDEzLCJleHAiOjE2MzE4Mzk2MTMsImlhdCI6MTYzMTc5NjQxM30.vCxV5y-1A7epllS9IUukNZoKbxNp0lA0AJEXZORe9pk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/User/List",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"User",
+								"List"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Roles",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6Ijk4NDgzOTI3LTM2ZWItNGU2ZC04N2M1LTdiNTU5M2FhOTFiZCIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwic3ViIjoiYWRtaW5AYWRtaW4uY29tIiwianRpIjoiZjRhZDI4NzctMzc1OS00NjM2LThjYWEtNjYxMzc0MGViOTVkIiwibmJmIjoxNjMxNzk2NDEzLCJleHAiOjE2MzE4Mzk2MTMsImlhdCI6MTYzMTc5NjQxM30.vCxV5y-1A7epllS9IUukNZoKbxNp0lA0AJEXZORe9pk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/UserRoles/Roles",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"UserRoles",
+								"Roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjQxYWIzYTQ3LTFmOTAtNDdhYy04OGUzLTI5N2VmOTg0NTA5ZSIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwic3ViIjoiYWRtaW5AYWRtaW4uY29tIiwianRpIjoiNGZlMzg5NjEtNzdkYi00Y2E0LWEyZGMtODVmYjU4OWM2MzUwIiwibmJmIjoxNjIwODE2MTY5LCJleHAiOjE2MjA4Mzc3NjksImlhdCI6MTYyMDgxNjE2OX0.mh9a-diLdwjJtRNPQ8Pl_6Ny-I3viZq1Aadaarfw6xY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": \"46930700-2e29-4774-975a-953d59d21538\",\r\n  \"firstName\": \"Wit\",\r\n  \"lastName\": \"Kem\",\r\n  \"phoneNumber\": \"0840866991\",\r\n  \"NewRole\" : \"User\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/User",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"User"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjQxYWIzYTQ3LTFmOTAtNDdhYy04OGUzLTI5N2VmOTg0NTA5ZSIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwic3ViIjoiYWRtaW5AYWRtaW4uY29tIiwianRpIjoiNGZlMzg5NjEtNzdkYi00Y2E0LWEyZGMtODVmYjU4OWM2MzUwIiwibmJmIjoxNjIwODE2MTY5LCJleHAiOjE2MjA4Mzc3NjksImlhdCI6MTYyMDgxNjE2OX0.mh9a-diLdwjJtRNPQ8Pl_6Ny-I3viZq1Aadaarfw6xY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": \"46930700-2e29-4774-975a-953d59d21538\",\r\n  \"passwordNew\": \"iT#1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/User/ResetPW",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"User",
+								"ResetPW"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GeneratePassword",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/User/GeneratePassword",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"User",
+								"GeneratePassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjQxYWIzYTQ3LTFmOTAtNDdhYy04OGUzLTI5N2VmOTg0NTA5ZSIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwic3ViIjoiYWRtaW5AYWRtaW4uY29tIiwianRpIjoiZjY4Njg1YmEtZTQ4Mi00Yzc5LWJiOGItNjg4OTEwZjkxYmMyIiwibmJmIjoxNjIwNzI4NzYyLCJleHAiOjE2MjA3NTAzNjIsImlhdCI6MTYyMDcyODc2Mn0.WRp3MPCyNUMrRfbrFKNj_cKKpFVwhPDhWFR7EVAOh5A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"firstName\": \"Wit\",\r\n  \"lastName\": \"Kem\",\r\n  \"email\": \"user4@user.com\",\r\n  \"password\": \"iT#1234\",\r\n  \"phoneNumber\": \"0840866991\",\r\n  \"NewRole\" : \"User\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/User/Create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"User",
+								"Create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetUserEdit",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6Ijk4NDgzOTI3LTM2ZWItNGU2ZC04N2M1LTdiNTU5M2FhOTFiZCIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwic3ViIjoiYWRtaW5AYWRtaW4uY29tIiwianRpIjoiZjRhZDI4NzctMzc1OS00NjM2LThjYWEtNjYxMzc0MGViOTVkIiwibmJmIjoxNjMxNzk2NDEzLCJleHAiOjE2MzE4Mzk2MTMsImlhdCI6MTYzMTc5NjQxM30.vCxV5y-1A7epllS9IUukNZoKbxNp0lA0AJEXZORe9pk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/User/98483927-36eb-4e6d-87c5-7b5593aa91bd",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"User",
+								"98483927-36eb-4e6d-87c5-7b5593aa91bd"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

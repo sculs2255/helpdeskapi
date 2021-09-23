@@ -3,9 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace HelpDeskApi.Models.DTOs.Requests
 {
-    public class IsmDbFilter : QueryStringFilter
+    public class HDSystemFilter : QueryStringFilter
     {
-        public int IsmID { get; set; } 
+        public int SystemID { get; set; } 
+        
         
     }
 }

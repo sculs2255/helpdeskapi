@@ -16,34 +16,33 @@ namespace HelpDeskApi.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class IsmDbController : ControllerBase
+    public class HDSystemController : ControllerBase
     {
         private readonly DataContext _context;
-        public IsmDbController(DataContext context)
+        public  HDSystemController(DataContext context)
         {
             _context = context;
         }
 
         [HttpGet]
-        public async Task<ActionResult> List([FromQuery] IsmDbFilter filter)
+        public async Task<ActionResult> List([FromQuery] HDSystemFilter filter)
         {
             try
             {
-                
 
-                var query = (from s in _context.IsmDb
+                var query = (from p in _context.HDSystem
                              select new
                              {
-                                 IsmID = s.IsmID,
-                                 IsmName = s.IsmName
+                                 SystemID = p.SystemID,
+                                 SystemName = p.SystemName
 
                              });
 
                 var DbF = Microsoft.EntityFrameworkCore.EF.Functions;
 
-                if (filter.IsmID > 0)
+                if (filter.SystemID > 0)
                 {
-                    query = query.Where(q => q.IsmID == filter.IsmID);
+                    query = query.Where(q => q.SystemID == filter.SystemID);
                 }
 
                 /*
@@ -53,28 +52,24 @@ namespace HelpDeskApi.Controllers
                }
                */
 
-             
+               
+
                 switch (filter.sortOrder)
                 {
-                    case "IsmName":
-                        query = query.OrderBy(q => q.IsmName);
-                        Console.WriteLine("1");
+                    case "systemName":
+                        query = query.OrderBy(q => q.SystemName);
                         break;
-                    case "IsmName_desc":
-                        query = query.OrderByDescending(q => q.IsmName);
-                        Console.WriteLine("2");
+                    case "systemName_desc":
+                        query = query.OrderByDescending(q => q.SystemName);
                         break;
-                    case "IsmID":
-                        query = query.OrderBy(q => q.IsmID);
-                        Console.WriteLine("3");
+                    case "systemID":
+                        query = query.OrderBy(q => q.SystemID);
                         break;
-                    case "IsmID_desc":
-                        query = query.OrderByDescending(q => q.IsmID);
-                        Console.WriteLine("4");
+                    case "systemID_desc":
+                        query = query.OrderByDescending(q => q.SystemID);
                         break;
                     default:
-                        query = query.OrderBy(q => q.IsmID);
-                        Console.WriteLine("0");
+                        query = query = query.OrderBy(q => q.SystemID);
                         break;
                 }
 
@@ -85,7 +80,6 @@ namespace HelpDeskApi.Controllers
                 {
                     totalItems = totalItems,
                     data = data,
-                    filter = filter,
                     isSuccess = true
                 });
             }
@@ -104,7 +98,7 @@ namespace HelpDeskApi.Controllers
         {
             try
             {
-                var existingData = await _context.IsmDb.FindAsync(id);
+                var existingData = await _context.HDSystem.FindAsync(id);
                 if (existingData == null)
                 {
                     return BadRequest(new
@@ -133,11 +127,11 @@ namespace HelpDeskApi.Controllers
 
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] IsmDbRequest request)
+        public async Task<IActionResult> Update(int id, [FromBody] HDSystemRequest request, int SystemName)
         {
             try
             {
-                var existingData = await _context.IsmDb.FindAsync(id);
+                var existingData = await _context.HDSystem.FindAsync(id);
                 if (existingData == null)
                 {
                     return BadRequest(new
@@ -147,8 +141,8 @@ namespace HelpDeskApi.Controllers
                         isSuccess = false
                     });
                 }
-                existingData.IsmID = request.IsmID;
-                existingData.IsmName = request.IsmName;
+                existingData.SystemID = request.SystemID;
+                existingData.SystemName = request.SystemName;
 
                 await _context.SaveChangesAsync();
 
@@ -168,17 +162,17 @@ namespace HelpDeskApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] IsmDbRequest request)
+        public async Task<IActionResult> Create([FromBody] HDSystemRequest request)
         {
             try
             {
-                var temp = new IsmDb
+                var temp = new HDSystem
                 {
-                    IsmID = request.IsmID,
-                    IsmName = request.IsmName
+                    SystemID = request.SystemID,
+                    SystemName = request.SystemName
                 };
 
-                _context.IsmDb.Add(temp);
+                _context.HDSystem.Add(temp);
                 await _context.SaveChangesAsync();
 
 
@@ -205,7 +199,7 @@ namespace HelpDeskApi.Controllers
             try
             {
 
-                var existingData = await _context.IsmDb.FindAsync(id);
+                var existingData = await _context.HDSystem.FindAsync(id);
 
                 if (existingData == null)
                 {
@@ -216,7 +210,7 @@ namespace HelpDeskApi.Controllers
                     });
                 }
 
-                _context.IsmDb.Remove(existingData);
+                _context.HDSystem.Remove(existingData);
                 await _context.SaveChangesAsync();
 
                 return Ok(new
