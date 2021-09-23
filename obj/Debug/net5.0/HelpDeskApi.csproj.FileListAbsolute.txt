@@ -106,3 +106,13 @@ C:\PCF120721\helpdeskapi\obj\Debug\net5.0\HelpDeskApi.dll
 C:\PCF120721\helpdeskapi\obj\Debug\net5.0\ref\HelpDeskApi.dll
 C:\PCF120721\helpdeskapi\obj\Debug\net5.0\HelpDeskApi.pdb
 C:\PCF120721\helpdeskapi\obj\Debug\net5.0\HelpDeskApi.genruntimeconfig.cache
+D:\Project-PCG\VS-code-project\helpdeskapi\helpdeskapi\bin\Debug\net5.0\HelpDeskApi.Views.dll
+D:\Project-PCG\VS-code-project\helpdeskapi\helpdeskapi\bin\Debug\net5.0\HelpDeskApi.Views.pdb
+D:\Project-PCG\VS-code-project\helpdeskapi\helpdeskapi\obj\Debug\net5.0\HelpDeskApi.RazorAssemblyInfo.cache
+D:\Project-PCG\VS-code-project\helpdeskapi\helpdeskapi\obj\Debug\net5.0\HelpDeskApi.RazorAssemblyInfo.cs
+D:\Project-PCG\VS-code-project\helpdeskapi\helpdeskapi\obj\Debug\net5.0\HelpDeskApi.TagHelpers.input.cache
+D:\Project-PCG\VS-code-project\helpdeskapi\helpdeskapi\obj\Debug\net5.0\HelpDeskApi.TagHelpers.output.cache
+D:\Project-PCG\VS-code-project\helpdeskapi\helpdeskapi\obj\Debug\net5.0\HelpDeskApi.RazorCoreGenerate.cache
+D:\Project-PCG\VS-code-project\helpdeskapi\helpdeskapi\obj\Debug\net5.0\Razor\Views\IncidentCase\Create.cshtml.g.cs
+D:\Project-PCG\VS-code-project\helpdeskapi\helpdeskapi\obj\Debug\net5.0\HelpDeskApi.RazorTargetAssemblyInfo.cs
+D:\Project-PCG\VS-code-project\helpdeskapi\helpdeskapi\obj\Debug\net5.0\HelpDeskApi.Views.pdb

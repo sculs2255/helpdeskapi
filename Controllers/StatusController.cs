@@ -52,18 +52,28 @@ namespace HelpDeskApi.Controllers
                }
                */
 
-                query = query.OrderBy(q => q.StatusID);
-
+             
                 switch (filter.sortOrder)
                 {
-                    case "Status":
+                    case "statusName":
                         query = query.OrderBy(q => q.StatusName);
+                        Console.WriteLine("1");
                         break;
-                    case "Status_desc":
+                    case "statusName_desc":
                         query = query.OrderByDescending(q => q.StatusName);
+                        Console.WriteLine("2");
+                        break;
+                    case "statusID":
+                        query = query.OrderBy(q => q.StatusID);
+                        Console.WriteLine("3");
+                        break;
+                    case "statusID_desc":
+                        query = query.OrderByDescending(q => q.StatusID);
+                        Console.WriteLine("4");
                         break;
                     default:
-                        query = query = query.OrderBy(q => q.StatusID);
+                        query = query.OrderBy(q => q.StatusID);
+                        Console.WriteLine("0");
                         break;
                 }
 
@@ -74,6 +84,7 @@ namespace HelpDeskApi.Controllers
                 {
                     totalItems = totalItems,
                     data = data,
+                    filter = filter,
                     isSuccess = true
                 });
             }

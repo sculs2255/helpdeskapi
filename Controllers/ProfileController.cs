@@ -41,23 +41,25 @@ namespace HelpDeskApi.Controllers
             try
             {
                 var identity = HttpContext.User.Identity as ClaimsIdentity;
-                IList<Claim> claim = identity.Claims.ToList(); 
+                IList<Claim> claim = identity.Claims.ToList();
                 var userInfo = await _userManager.FindByEmailAsync(claim[1].Value);
                 var userRole = await _userManager.GetRolesAsync(userInfo);
 
                 return Ok(new
                 {
-                    data = new { 
-                                user = new { 
-                                        firstName=userInfo.FirstName,
-                                        lastName=userInfo.LastName,
-                                        email = userInfo.Email,
-                                        id = userInfo.Id,
-                                        phoneNumber = userInfo.PhoneNumber,
-                                        userName = userInfo.UserName
-                                    }, 
-                                role = userRole 
-                            },
+                    data = new
+                    {
+                        user = new
+                        {
+                            firstName = userInfo.FirstName,
+                            lastName = userInfo.LastName,
+                            email = userInfo.Email,
+                            id = userInfo.Id,
+                            phoneNumber = userInfo.PhoneNumber,
+                            userName = userInfo.UserName
+                        },
+                        role = userRole
+                    },
                     isSuccess = true
                 });
             }
@@ -72,6 +74,6 @@ namespace HelpDeskApi.Controllers
         }
 
 
-       
+
     }
 }

@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Http;
 
 namespace HelpDeskApi.Data
 {
+
     public class DataContext : IdentityDbContext<ApplicationUser>
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
+<<<<<<< HEAD
         public DbSet<Case> HD_Case { get; set; }   
         public DbSet<Status> Status { get; set; }   
 
@@ -38,5 +40,14 @@ namespace HelpDeskApi.Data
         
        
        
+=======
+        public DbSet<Case> HD_Case { get; set; }
+        public DbSet<Status> Status { get; set; }
+        public DbSet<IsmDb> IsmDb { get; set; }
+        public DbSet<IncidentCase> IncidentCase { get; set; }
+     
+
+
+>>>>>>> 8318f1ec7da2072c666fde64ec81f69329da7c74
     }
 }
