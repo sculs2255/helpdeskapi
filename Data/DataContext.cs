@@ -13,7 +13,9 @@ namespace HelpDeskApi.Data
         public DbSet<Status> Status { get; set; }
         public DbSet<IsmDb> IsmDb { get; set; }
         public DbSet<IncidentCase> IncidentCase { get; set; }
-     
+        public DbSet<RequestCase> RequestCase { get; set; }
+
+
 
 
     }
