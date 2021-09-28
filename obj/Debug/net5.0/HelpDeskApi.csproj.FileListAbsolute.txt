@@ -116,3 +116,4 @@ D:\Project-PCG\VS-code-project\helpdeskapi\helpdeskapi\obj\Debug\net5.0\HelpDesk
 D:\Project-PCG\VS-code-project\helpdeskapi\helpdeskapi\obj\Debug\net5.0\Razor\Views\IncidentCase\Create.cshtml.g.cs
 D:\Project-PCG\VS-code-project\helpdeskapi\helpdeskapi\obj\Debug\net5.0\HelpDeskApi.RazorTargetAssemblyInfo.cs
 D:\Project-PCG\VS-code-project\helpdeskapi\helpdeskapi\obj\Debug\net5.0\HelpDeskApi.Views.pdb
+D:\Project-PCG\VS-code-project\helpdeskapi\helpdeskapi\bin\Debug\net5.0\Postman\HELPDESK API.postman_collection.json

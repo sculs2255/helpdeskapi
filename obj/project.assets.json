@@ -1916,19 +1916,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\User\\.nuget\\packages\\": {}
+    "C:\\Users\\sculs\\.nuget\\packages\\": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\PCF120721\\helpdeskapi\\HelpDeskApi.csproj",
+      "projectUniqueName": "d:\\Project-PCG\\VS-code-project\\helpdeskapi\\helpdeskapi\\HelpDeskApi.csproj",
       "projectName": "HelpDeskApi",
-      "projectPath": "c:\\PCF120721\\helpdeskapi\\HelpDeskApi.csproj",
-      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "c:\\PCF120721\\helpdeskapi\\obj\\",
+      "projectPath": "d:\\Project-PCG\\VS-code-project\\helpdeskapi\\helpdeskapi\\HelpDeskApi.csproj",
+      "packagesPath": "C:\\Users\\sculs\\.nuget\\packages\\",
+      "outputPath": "d:\\Project-PCG\\VS-code-project\\helpdeskapi\\helpdeskapi\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+      ],
       "configFilePaths": [
-        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\sculs\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net5.0"

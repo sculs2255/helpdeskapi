@@ -24,10 +24,10 @@ namespace HelpDeskApi.Data
         public DbSet<Priority> Priority { get; set; }  
 
         public DbSet<Topic> Topic{ get; set; }  
-
-        public DbSet<User> User{ get; set; }  
+        
         public DbSet<IncidentCase> IncidentCase { get; set; }
         public DbSet<RequestCase> RequestCase { get; set; }
+        public DbSet<Comment> Comment { get; set; }
 
 
 
