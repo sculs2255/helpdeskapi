@@ -40,9 +40,6 @@ namespace HelpDeskApi.Controllers
         [Route("List")]
         public async Task<ActionResult> List()
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            IList<Claim> claim = identity.Claims.ToList();
-            var userInfo = await _userManager.FindByEmailAsync(claim[1].Value);
             try
             {
                 var user = await (from cm in _context.Comment
