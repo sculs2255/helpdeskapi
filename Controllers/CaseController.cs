@@ -300,6 +300,7 @@ namespace HelpDeskApi.Controllers
 
                 if (temp.CaseTypeID == 1)
                 {
+                    Console.WriteLine(temp.CaseTypeID);
                     var transICase = new IncidentCase
                     {
                         CaseID = temp.CaseID,
