@@ -6,7 +6,10 @@ namespace HelpDeskApi.Models
     {    
         public int DepartmentID { get; set; }
         public string  DepartmentName { get; set; } 
+
+        public int? BranchID { get; set; }
        
+
         
     }
 }

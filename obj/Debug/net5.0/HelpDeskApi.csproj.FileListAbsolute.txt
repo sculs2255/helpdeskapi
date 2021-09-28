@@ -116,3 +116,14 @@ D:\Project-PCG\VS-code-project\helpdeskapi\helpdeskapi\obj\Debug\net5.0\HelpDesk
 D:\Project-PCG\VS-code-project\helpdeskapi\helpdeskapi\obj\Debug\net5.0\Razor\Views\IncidentCase\Create.cshtml.g.cs
 D:\Project-PCG\VS-code-project\helpdeskapi\helpdeskapi\obj\Debug\net5.0\HelpDeskApi.RazorTargetAssemblyInfo.cs
 D:\Project-PCG\VS-code-project\helpdeskapi\helpdeskapi\obj\Debug\net5.0\HelpDeskApi.Views.pdb
+C:\PCF120721\helpdeskapi\bin\Debug\net5.0\Postman\HELPDESK API.postman_collection.json
+C:\PCF120721\helpdeskapi\bin\Debug\net5.0\HelpDeskApi.Views.dll
+C:\PCF120721\helpdeskapi\bin\Debug\net5.0\HelpDeskApi.Views.pdb
+C:\PCF120721\helpdeskapi\obj\Debug\net5.0\HelpDeskApi.RazorAssemblyInfo.cache
+C:\PCF120721\helpdeskapi\obj\Debug\net5.0\HelpDeskApi.RazorAssemblyInfo.cs
+C:\PCF120721\helpdeskapi\obj\Debug\net5.0\HelpDeskApi.TagHelpers.input.cache
+C:\PCF120721\helpdeskapi\obj\Debug\net5.0\HelpDeskApi.TagHelpers.output.cache
+C:\PCF120721\helpdeskapi\obj\Debug\net5.0\HelpDeskApi.RazorCoreGenerate.cache
+C:\PCF120721\helpdeskapi\obj\Debug\net5.0\Razor\Views\IncidentCase\Create.cshtml.g.cs
+C:\PCF120721\helpdeskapi\obj\Debug\net5.0\HelpDeskApi.RazorTargetAssemblyInfo.cs
+C:\PCF120721\helpdeskapi\obj\Debug\net5.0\HelpDeskApi.Views.pdb

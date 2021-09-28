@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "d:\\Project-PCG\\VS-code-project\\helpdeskapi\\helpdeskapi\\HelpDeskApi.csproj": {}
+    "c:\\PCF120721\\helpdeskapi\\HelpDeskApi.csproj": {}
   },
   "projects": {
-    "d:\\Project-PCG\\VS-code-project\\helpdeskapi\\helpdeskapi\\HelpDeskApi.csproj": {
+    "c:\\PCF120721\\helpdeskapi\\HelpDeskApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "d:\\Project-PCG\\VS-code-project\\helpdeskapi\\helpdeskapi\\HelpDeskApi.csproj",
+        "projectUniqueName": "c:\\PCF120721\\helpdeskapi\\HelpDeskApi.csproj",
         "projectName": "HelpDeskApi",
-        "projectPath": "d:\\Project-PCG\\VS-code-project\\helpdeskapi\\helpdeskapi\\HelpDeskApi.csproj",
-        "packagesPath": "C:\\Users\\sculs\\.nuget\\packages\\",
-        "outputPath": "d:\\Project-PCG\\VS-code-project\\helpdeskapi\\helpdeskapi\\obj\\",
+        "projectPath": "c:\\PCF120721\\helpdeskapi\\HelpDeskApi.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "c:\\PCF120721\\helpdeskapi\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"

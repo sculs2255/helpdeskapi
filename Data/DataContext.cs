@@ -29,6 +29,11 @@ namespace HelpDeskApi.Data
         public DbSet<IncidentCase> IncidentCase { get; set; }
         public DbSet<RequestCase> RequestCase { get; set; }
 
+        public DbSet<Workplace> Workplace { get; set; }
+
+
+
+
 
 
 
