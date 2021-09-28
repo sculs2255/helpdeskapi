@@ -6,7 +6,7 @@ namespace HelpDeskApi.Models
     {    
         public int WorkplaceID { get; set; }
 
-        public int UserID {get; set;}
+        public string UserID {get; set;}
         
         public int CountryID { get; set; } 
         public int  	BranchID { get; set; } 
