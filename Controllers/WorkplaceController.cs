@@ -1,15 +1,18 @@
-using HelpDeskApi.Data;
-using HelpDeskApi.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using HelpDeskApi.Data;
+using HelpDeskApi.Models;
 using HelpDeskApi.Models.DTOs.Requests;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
+using System.Text;
 
 namespace HelpDeskApi.Controllers
 {
@@ -18,82 +21,58 @@ namespace HelpDeskApi.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class WorkplaceController : ControllerBase
     {
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly DataContext _context;
-        public  WorkplaceController(DataContext context)
+
+        public WorkplaceController(
+            UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager,
+            DataContext context)
         {
             _context = context;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
+
         [HttpGet]
-        public async Task<ActionResult> List([FromQuery] WorkplaceFilter filter)
+        
+        public async Task<ActionResult> List()
         {
             try
             {
-
-                var query = (from m in _context.Workplace
-                             select new
-                             {
-                                 WorkplaceID = m.WorkplaceID,   
-                                 UserID = m.UserID,
-                                 CountryID = m.CountryID,
-                                 BranchID = m.BranchID , 
-                                 DepartmentID = m.DepartmentID
-
-                             });
-
-                var DbF = Microsoft.EntityFrameworkCore.EF.Functions;
-
-               if (filter.WorkplaceID > 0)
-                {
-                    query = query.Where(q => q.WorkplaceID == filter.WorkplaceID);
-                }
-
-                /*
-               if (!String.IsNullOrEmpty(filter.textSearch))
-               {
-                   query = query.Where(q => DbF.Like(q.Name, "%" + filter.textSearch + "%"));
-               }
-               */
-
-       
-
-                switch (filter.sortOrder)
-                {
-                    case "BranchName":
-                        query = query.OrderBy(q => q.WorkplaceID);
-                        break;
-                    case "BranchName_desc":
-                        query = query.OrderByDescending(q => q.WorkplaceID);
-                        break;
-                    case "BranchID":
-                        query = query.OrderBy(q => q.WorkplaceID);
-                        break;
-                    case "BranchID_desc":
-                        query = query.OrderByDescending(q => q.WorkplaceID);
-                        break;
-                    default:
-                        query = query = query.OrderBy(q => q.WorkplaceID);
-                        break;
-                }
-
-                int totalItems = query.Count();
-                var data = await query.Skip((filter.pageNumber - 1) * filter.pageSize).Take(filter.pageSize).ToListAsync();
+                var user = await (from wp in _context.Workplace
+                                  join u in _context.Users on wp.UserID equals u.Id into cmr
+                                  from cmResult in cmr.DefaultIfEmpty()
+                                      // join cm in _context.Users on u.Id equals cm.UserID into cr
+                                      // from crResult in cr.DefaultIfEmpty()
+                                  
+                                  select new
+                                  {
+                                      wp.WorkplaceID,
+                                      UserID = wp.UserID,
+                                      wp.CountryID,
+                                      wp.BranchID,
+                                      wp.DepartmentID
+                                  }
+                            ).ToListAsync();
 
                 return Ok(new
                 {
-                    totalItems = totalItems,
-                    data = data,
+                    data = user,
                     isSuccess = true
                 });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return BadRequest(new
+                return Ok(new
                 {
-                    message = ex,
                     isSuccess = false
                 });
+
             }
+
         }
 
         [HttpGet("{id}")]

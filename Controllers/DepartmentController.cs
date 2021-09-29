@@ -172,7 +172,8 @@ namespace HelpDeskApi.Controllers
                 var temp = new Department
                 {
                     DepartmentID = request.DepartmentID,
-                    DepartmentName = request.DepartmentName
+                    DepartmentName = request.DepartmentName,
+                    BranchID = request.BranchID 
                 };
 
                 _context.Department.Add(temp);
