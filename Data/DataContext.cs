@@ -30,6 +30,7 @@ namespace HelpDeskApi.Data
         public DbSet<Comment> Comment { get; set; }
 
         public DbSet<Workplace> Workplace { get; set; }
+        public DbSet<Receiver> Receiver { get; set; }
 
 
 

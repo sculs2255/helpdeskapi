@@ -19,13 +19,13 @@ namespace HelpDeskApi.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class CommentController : ControllerBase
+    public class ReceiverController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly DataContext _context;
 
-        public CommentController(
+        public ReceiverController(
             UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
             DataContext context)
@@ -43,21 +43,15 @@ namespace HelpDeskApi.Controllers
 
             try
             {
-                var query = await (from cm in _context.Comment
-                                   join u in _context.Users on cm.UserID equals u.Id into cmr
-                                   from cmResult in cmr.DefaultIfEmpty()
-                                      
-                                   join c in _context.HD_Case on cm.CaseID equals c.CaseID into cr
-                                   from cResult in cr.DefaultIfEmpty()
+                var query = await (from r in _context.Receiver
                                    select new
                                    {
-                                       cm.CommentID,
-                                       UserID = cm.UserID,
-                                       CaseID = cm.CaseID,
-                                       cm.Title,
-                                       cm.Detail,
-                                       cm.File,
-                                       cm.CmDate
+                                       r.ReceiverID,
+                                       r.CaseID,
+                                       r.UserID,
+                                       r.Description,
+                                       r.File
+
                                    }
                             ).ToListAsync();
 
@@ -78,31 +72,32 @@ namespace HelpDeskApi.Controllers
 
         }
 
-
-
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CommentRequest request)
+        public async Task<IActionResult> Update(ReceiverRequest request)
         {
             try
             {
-                var newComment = new Comment
-                {
-                    CaseID = request.CaseID,
-                    UserID = request.UserID,
-                    Title = request.Title,
-                    Detail = request.Detail,
-                    File = request.File,
-                    CmDate = DateTime.Now
-                };
+                var existingData = await _context.Receiver.FindAsync(request.CaseID);
 
-                _context.Comment.Add(newComment);
+                if (existingData == null)
+                {
+                    return BadRequest(new
+                    {
+                        message = "Data NotFound",
+                        isSuccess = false
+                    });
+                }
+
+                existingData.UserID = request.UserID;
+                existingData.Description = request.Description;
+                existingData.File = request.File;
                 await _context.SaveChangesAsync();
 
-                return BadRequest(new
+
+                return Ok(new
                 {
                     isSuccess = true
                 });
-
             }
             catch (Exception ex)
             {
@@ -113,6 +108,7 @@ namespace HelpDeskApi.Controllers
                 });
             }
         }
+
 
     }
 }

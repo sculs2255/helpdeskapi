@@ -35,6 +35,8 @@ namespace HelpDeskApi.Controllers
                              from ic in ic2.DefaultIfEmpty()
                              join rc1 in _context.RequestCase on c.CaseID equals rc1.CaseID into rc2
                              from rc in rc2.DefaultIfEmpty()
+                             join re1 in _context.Receiver on c.CaseID equals re1.CaseID into re2
+                             from re in re2.DefaultIfEmpty()
                                  //  where c.CaseID == ic.CaseID
                              select new
                              {
@@ -60,6 +62,10 @@ namespace HelpDeskApi.Controllers
                                  RcFile = rc.File,
                                  RcNote = rc.Note,
                                  RcCCMail = rc.CCMail,
+                                 //Receiver data
+                                 ReDescription = re.Description,
+                                 ReFile = re.File,
+                                 ReUserID = re.UserID,
                              });
                 // var data = await query.FirstOrDefaultAsync();
 
@@ -131,6 +137,8 @@ namespace HelpDeskApi.Controllers
                     var query = (from c in _context.HD_Case
                                  join ic1 in _context.IncidentCase on c.CaseID equals ic1.CaseID into ic2
                                  from ic in ic2.DefaultIfEmpty()
+                                 join re1 in _context.Receiver on c.CaseID equals re1.CaseID into re2
+                                 from re in re2.DefaultIfEmpty()
                                  where c.CaseID == existingData.CaseID && c.CaseID == ic.CaseID
                                  select new
                                  {
@@ -149,6 +157,10 @@ namespace HelpDeskApi.Controllers
                                      File = ic.File,
                                      Note = ic.Note,
                                      CCMail = ic.CCMail,
+                                     //Receiver data
+                                     ReDescription = re.Description,
+                                     ReFile = re.File,
+                                     ReUserID = re.UserID,
                                  });
                     var dataIc = await query.FirstOrDefaultAsync();
                     return Ok(new
@@ -162,6 +174,8 @@ namespace HelpDeskApi.Controllers
                     var query = (from c in _context.HD_Case
                                  join rc1 in _context.RequestCase on c.CaseID equals rc1.CaseID into rc2
                                  from rc in rc2.DefaultIfEmpty()
+                                 join re1 in _context.Receiver on c.CaseID equals re1.CaseID into re2
+                                 from re in re2.DefaultIfEmpty()
                                  where c.CaseID == existingData.CaseID && c.CaseID == rc.CaseID
                                  select new
                                  {
@@ -178,6 +192,10 @@ namespace HelpDeskApi.Controllers
                                      File = rc.File,
                                      Note = rc.Note,
                                      CCMail = rc.CCMail,
+                                     //Receiver data
+                                     ReDescription = re.Description,
+                                     ReFile = re.File,
+                                     ReUserID = re.UserID,
                                  });
                     var dataRc = await query.FirstOrDefaultAsync();
                     return Ok(new
@@ -252,6 +270,7 @@ namespace HelpDeskApi.Controllers
             try
             {
                 var existingData = await _context.HD_Case.FindAsync(id);
+
                 if (existingData == null)
                 {
                     return BadRequest(new
@@ -261,11 +280,9 @@ namespace HelpDeskApi.Controllers
                     });
                 }
 
-                existingData.CaseTypeID = request.CaseTypeID;
-                existingData.PriorityID = request.PriorityID;
                 existingData.StatusID = request.StatusID;
-
                 await _context.SaveChangesAsync();
+
 
                 return Ok(new
                 {
@@ -296,6 +313,14 @@ namespace HelpDeskApi.Controllers
                 };
 
                 _context.HD_Case.Add(temp);
+                await _context.SaveChangesAsync();
+
+                var tempReceiver = new Receiver
+                {
+                    CaseID = temp.CaseID,
+                };
+
+                _context.Receiver.Add(tempReceiver);
                 await _context.SaveChangesAsync();
 
                 if (temp.CaseTypeID == 1)

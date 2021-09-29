@@ -10,7 +10,7 @@ namespace HelpDeskApi.Models.DTOs.Requests
         public string Title { get; set; }
         public string Detail { get; set; }
         public string File { get; set; }
-        public DateTime? CmDate { get; set; } 
+        public DateTime? CmDate { get; set; }
 
 
     }
