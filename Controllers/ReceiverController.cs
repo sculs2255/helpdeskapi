@@ -43,16 +43,10 @@ namespace HelpDeskApi.Controllers
 
             try
             {
-                var query = await (from r in _context.Receiver
-                                   select new
-                                   {
-                                       r.ReceiverID,
-                                       r.CaseID,
-                                       r.UserID,
-                                       r.Description,
-                                       r.File
 
-                                   }
+                var query = await (from r in _context.Receiver
+                                       //where r.CaseID == CaseID
+                                   select r
                             ).ToListAsync();
 
                 return Ok(new
@@ -72,12 +66,16 @@ namespace HelpDeskApi.Controllers
 
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Update(ReceiverRequest request)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] ReceiverRequest request)
         {
             try
             {
-                var existingData = await _context.Receiver.FindAsync(request.CaseID);
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                IList<Claim> claim = identity.Claims.ToList();
+                var userInfo = await _userManager.FindByEmailAsync(claim[1].Value);
+
+                var existingData = await _context.Receiver.FindAsync(id);
 
                 if (existingData == null)
                 {
@@ -88,14 +86,37 @@ namespace HelpDeskApi.Controllers
                     });
                 }
 
-                existingData.UserID = request.UserID;
-                existingData.Description = request.Description;
-                existingData.File = request.File;
-                await _context.SaveChangesAsync();
+                var CaseID = existingData.CaseID;
+                var existingCase = await _context.HD_Case.FindAsync(CaseID);
 
+                if (existingCase == null)
+                {
+                    return BadRequest(new
+                    {
+                        message = "Data NotFound",
+                        isSuccess = false
+                    });
+                }
+
+                if (existingCase.StatusID == 2)
+                {
+                    existingCase.StatusID = 3;
+                    existingData.Description = request.Description;
+                    existingData.File = request.File;
+
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    existingCase.StatusID = 2;
+                    existingData.UserID = userInfo.Id;
+
+                    await _context.SaveChangesAsync();
+                }
 
                 return Ok(new
                 {
+                    data = CaseID,
                     isSuccess = true
                 });
             }

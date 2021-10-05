@@ -44,7 +44,7 @@ namespace HelpDeskApi.Controllers
                 IList<Claim> claim = identity.Claims.ToList();
                 var userInfo = await _userManager.FindByEmailAsync(claim[1].Value);
                 var userRole = await _userManager.GetRolesAsync(userInfo);
-
+//userInfo.Id
                 return Ok(new
                 {
                     data = new

@@ -281,6 +281,7 @@ namespace HelpDeskApi.Controllers
                 }
 
                 existingData.StatusID = request.StatusID;
+
                 await _context.SaveChangesAsync();
 
 
