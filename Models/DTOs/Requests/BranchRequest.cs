@@ -10,6 +10,8 @@ namespace HelpDeskApi.Models
         
         public string BranchName { get; set; } 
 
+        public int CountryID {get; set;}
+
          
         
     }

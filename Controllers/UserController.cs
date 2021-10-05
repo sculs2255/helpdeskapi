@@ -123,7 +123,7 @@ namespace HelpDeskApi.Controllers
                             }
                             ).ToListAsync();
 
-                
+                    
                 return Ok(new
                 {
                     data = user,

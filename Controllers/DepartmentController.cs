@@ -24,6 +24,10 @@ namespace HelpDeskApi.Controllers
             _context = context;
         }
 
+
+
+    
+      
         [HttpGet]
         public async Task<ActionResult> List([FromQuery] DepartmentFilter filter)
         {
@@ -31,11 +35,19 @@ namespace HelpDeskApi.Controllers
             {
 
                 var query = (from p in _context.Department
+                            join d1 in _context.Branch on p.BranchID  equals d1.BranchID into d2
+                            from d in d2.DefaultIfEmpty()
                              select new
-                             {
-                                 DepartmentID = p.DepartmentID,
-                                 DepartmentName = p.DepartmentName,
-                                 p.BranchID
+                             {      
+                                 //Department 
+                                 p.DepartmentID,
+                                 p.DepartmentName,
+                                 p.BranchID,
+                                 
+
+                                 //Branch 
+                                 BranchName = d.BranchName
+                              
 
 
                              });
@@ -96,38 +108,46 @@ namespace HelpDeskApi.Controllers
             }
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Details(int id)
+      [HttpGet("{id}")]
+        public async Task<IActionResult> Details (int id)
         {
             try
             {
-                var existingData = await _context.Department.FindAsync(id);
-                if (existingData == null)
-                {
-                    return BadRequest(new
-                    {
-                        message = "Data NotFound",
-                        isSuccess = false
-                    });
-                }
+                var branch = await (from wp in _context.Department
+                                  join u in _context.Branch on wp.BranchID equals u.BranchID into cmr
+                                  from cmResult in cmr.DefaultIfEmpty()
+                                  where cmResult.BranchID == id
+                                  
+                                      // join cm in _context.Users on u.Id equals cm.UserID into cr
+                                      // from crResult in cr.DefaultIfEmpty()
+                                  
+                                  select new
+                                  {
+                                      wp.DepartmentID,
+                                      BranchID = wp.BranchID,
+                                      wp.DepartmentName,
+                                      BranchName=cmResult.BranchName
+                                      
+                                      
+                                  }
+                            ).ToListAsync();
 
                 return Ok(new
                 {
-                    data = existingData,
+                    data = branch,
                     isSuccess = true
                 });
-
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return BadRequest(new
+                return Ok(new
                 {
-                    message = ex,
                     isSuccess = false
                 });
-            }
-        }
 
+            }
+
+        }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] DepartmentRequest request, int DepartmentName)
