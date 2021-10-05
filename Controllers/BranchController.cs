@@ -24,6 +24,8 @@ namespace HelpDeskApi.Controllers
             _context = context;
         }
 
+
+
         [HttpGet]
         public async Task<ActionResult> List([FromQuery] BranchFilter filter)
         {
@@ -36,6 +38,8 @@ namespace HelpDeskApi.Controllers
                                  BranchID = m.BranchID,
                                  BranchName= m.BranchName,
                                  m.CountryID 
+
+                                 
 
                              });
 
@@ -94,37 +98,49 @@ namespace HelpDeskApi.Controllers
             }
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Details(int id)
+        
+         [HttpGet("{id}")]
+        public async Task<IActionResult> Details (int id)
         {
             try
             {
-                var existingData = await _context.Branch.FindAsync(id);
-                if (existingData == null)
-                {
-                    return BadRequest(new
-                    {
-                        message = "Data NotFound",
-                        isSuccess = false
-                    });
-                }
+                var branch = await (from wp in _context.Branch
+                                  join u in _context.Country on wp.CountryID equals u.CountryID into cmr
+                                  from cmResult in cmr.DefaultIfEmpty()
+                                  where cmResult.CountryID == id
+                                  
+                                      // join cm in _context.Users on u.Id equals cm.UserID into cr
+                                      // from crResult in cr.DefaultIfEmpty()
+                                  
+                                  select new
+                                  {
+                                      wp.BranchID,
+                                      CountryID = wp.CountryID,
+                                      wp.BranchName,
+                                      CountryName=cmResult.CountryName
+                                      
+                                      
+                                  }
+                            ).ToListAsync();
 
                 return Ok(new
                 {
-                    data = existingData,
+                    data = branch,
                     isSuccess = true
+                });
+            }
+            catch (Exception)
+            {
+                return Ok(new
+                {
+                    isSuccess = false
                 });
 
             }
-            catch (Exception ex)
-            {
-                return BadRequest(new
-                {
-                    message = ex,
-                    isSuccess = false
-                });
-            }
+
         }
+
+    
 
 
         [HttpPut("{id}")]
@@ -144,6 +160,7 @@ namespace HelpDeskApi.Controllers
                 }
                 existingData.BranchID = request.BranchID;
                 existingData.BranchName = request.BranchName;
+                existingData.CountryID = request.CountryID;
 
                 await _context.SaveChangesAsync();
 

@@ -35,16 +35,16 @@ namespace HelpDeskApi.Controllers
             _roleManager = roleManager;
         }
 
-
-        [HttpGet]
-        
-        public async Task<ActionResult> List()
+      [HttpGet]
+        public async Task<IActionResult> ListAll ()
         {
             try
             {
                 var user = await (from wp in _context.Workplace
                                   join u in _context.Users on wp.UserID equals u.Id into cmr
                                   from cmResult in cmr.DefaultIfEmpty()
+                                  //where cmResult.Id == id 
+                                  
                                       // join cm in _context.Users on u.Id equals cm.UserID into cr
                                       // from crResult in cr.DefaultIfEmpty()
                                   
@@ -75,39 +75,48 @@ namespace HelpDeskApi.Controllers
 
         }
 
+
         [HttpGet("{id}")]
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details (string id)
         {
             try
             {
-                var existingData = await _context.Workplace.FindAsync(id);
-                if (existingData == null)
-                {
-                    return BadRequest(new
-                    {
-                        message = "Data NotFound",
-                        isSuccess = false
-                    });
-                }
+                var user = await (from wp in _context.Workplace
+                                  join u in _context.Users on wp.UserID equals u.Id into cmr
+                                  from cmResult in cmr.DefaultIfEmpty()
+                                  where cmResult.Id == id 
+                                  
+                                      // join cm in _context.Users on u.Id equals cm.UserID into cr
+                                      // from crResult in cr.DefaultIfEmpty()
+                                  
+                                  select new
+                                  {
+                                      wp.WorkplaceID,
+                                      UserID = wp.UserID,
+                                      wp.CountryID,
+                                      wp.BranchID,
+                                      wp.DepartmentID
+                                  }
+                            ).ToListAsync();
 
                 return Ok(new
                 {
-                    data = existingData,
+                    data = user,
                     isSuccess = true
                 });
-
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return BadRequest(new
+                return Ok(new
                 {
-                    message = ex,
                     isSuccess = false
                 });
+
             }
+
         }
 
-
+    
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] WorkplaceRequest request, int WorkplaceID)
         {
