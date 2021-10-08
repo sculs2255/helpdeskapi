@@ -66,6 +66,50 @@ namespace HelpDeskApi.Controllers
 
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Details(int id)
+        {
+            try
+            {
+                var existingData = await _context.HD_Case.FindAsync(id);
+                var query = (from re in _context.Receiver
+                             join u1 in _context.Users on re.UserID equals u1.Id into u2
+                             from u in u2.DefaultIfEmpty()
+                             join c1 in _context.HD_Case on re.CaseID equals c1.CaseID into c2
+                             from c in c2.DefaultIfEmpty()
+                             where re.UserID == u.Id && re.CaseID == c.CaseID && existingData.CaseID == re.CaseID
+
+                             // join cm in _context.Users on u.Id equals cm.UserID into cr
+                             // from crResult in cr.DefaultIfEmpty()
+
+                             select new
+                             {
+                                 re.ReceiverID,
+                                 re.CaseID,
+                                 firstName = u.FirstName,
+                                 lastName = u.LastName,
+                                 phone = u.PhoneNumber,
+                                 email = u.Email
+                             }
+                            );
+                var receiver = await query.FirstOrDefaultAsync();
+                return Ok(new
+                {
+                    data = receiver,
+                    isSuccess = true
+                });
+            }
+            catch (Exception)
+            {
+                return Ok(new
+                {
+                    isSuccess = false
+                });
+
+            }
+
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] ReceiverRequest request)
         {

@@ -5,6 +5,7 @@ namespace HelpDeskApi.Models.DTOs.Requests
 {
     public class CommentRequest
     {
+         public int CommentID { get; set; }
         public int CaseID { get; set; }
         public string UserID { get; set; }
         public string Title { get; set; }

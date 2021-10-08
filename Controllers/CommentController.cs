@@ -43,16 +43,17 @@ namespace HelpDeskApi.Controllers
 
             try
             {
+
                 var query = await (from cm in _context.Comment
-                                   join u in _context.Users on cm.UserID equals u.Id into cmr
-                                   from cmResult in cmr.DefaultIfEmpty()
-                                      
+                                   join u1 in _context.Users on cm.UserID equals u1.Id into cmr
+                                   from u in cmr.DefaultIfEmpty()
+
                                    join c in _context.HD_Case on cm.CaseID equals c.CaseID into cr
                                    from cResult in cr.DefaultIfEmpty()
                                    select new
                                    {
                                        cm.CommentID,
-                                       UserID = cm.UserID,
+                                       UserID = u.Id,
                                        CaseID = cm.CaseID,
                                        cm.Title,
                                        cm.Detail,
@@ -78,17 +79,62 @@ namespace HelpDeskApi.Controllers
 
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Details(int id)
+        {
+            try
+            {
+                var existingData = await _context.HD_Case.FindAsync(id);
+                var query = (from cm in _context.Comment
+                             join u1 in _context.Users on cm.UserID equals u1.Id into u2
+                             from u in u2.DefaultIfEmpty()
+                             join c1 in _context.HD_Case on cm.CaseID equals c1.CaseID into c2
+                             from c in c2.DefaultIfEmpty()
+                             where cm.UserID == u.Id && cm.CaseID == c.CaseID && existingData.CaseID == cm.CaseID
 
+                             select new
+                             {
+                                 
+                                 cm.CaseID,
+                                 firstName = u.FirstName,
+                                 lastName = u.LastName,
+                                 cm.Title,
+                                 cm.Detail,
+                                 cm.CmDate
+
+                             }
+                            );
+                var comment = await query.ToListAsync();
+                return Ok(new
+                {
+                    data = comment,
+                    isSuccess = true
+                });
+            }
+            catch (Exception)
+            {
+                return Ok(new
+                {
+                    isSuccess = false
+                });
+
+            }
+
+        }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CommentRequest request)
         {
             try
             {
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                IList<Claim> claim = identity.Claims.ToList();
+                var userInfo = await _userManager.FindByEmailAsync(claim[1].Value);
+
                 var newComment = new Comment
                 {
                     CaseID = request.CaseID,
-                    UserID = request.UserID,
+                    UserID = userInfo.Id,
                     Title = request.Title,
                     Detail = request.Detail,
                     File = request.File,
