@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using System.Text;
 
+
 namespace HelpDeskApi.Controllers
 {
     [Route("api/[controller]")]
@@ -35,48 +36,49 @@ namespace HelpDeskApi.Controllers
             _roleManager = roleManager;
         }
 
-      [HttpGet]
-        public async Task<IActionResult> ListAll ()
+      
+        [HttpGet]
+              public async Task<IActionResult> List ()
         {
             try
             {
-                var user = await (from wp in _context.Workplace
+
+               var user = await (from wp in _context.Workplace
                                   join u in _context.Users on wp.UserID equals u.Id into cmr
                                   from cmResult in cmr.DefaultIfEmpty()
-                                  //where cmResult.Id == id 
-                                  
-                                      // join cm in _context.Users on u.Id equals cm.UserID into cr
-                                      // from crResult in cr.DefaultIfEmpty()
-                                  
-                                  select new
-                                  {
+                             select new
+                             {      
+                                 //Department 
                                       wp.WorkplaceID,
                                       UserID = wp.UserID,
-                                      wp.CountryID,
-                                      wp.BranchID,
                                       wp.DepartmentID
-                                  }
-                            ).ToListAsync();
+
+
+                             }).ToListAsync();
+                /*
+               if (!String.IsNullOrEmpty(filter.textSearch))
+               {
+                   query = query.Where(q => DbF.Like(q.Name, "%" + filter.textSearch + "%"));
+               }
+               */
 
                 return Ok(new
                 {
+                    
                     data = user,
                     isSuccess = true
                 });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return Ok(new
+                return BadRequest(new
                 {
+                    message = ex,
                     isSuccess = false
                 });
-
             }
-
         }
-
-
-        [HttpGet("{id}")]
+[HttpGet("{id}")]
         public async Task<IActionResult> Details (string id)
         {
             try
@@ -93,12 +95,11 @@ namespace HelpDeskApi.Controllers
                                   {
                                       wp.WorkplaceID,
                                       UserID = wp.UserID,
-                                      wp.CountryID,
-                                      wp.BranchID,
                                       wp.DepartmentID
                                   }
                             ).ToListAsync();
 
+           
                 return Ok(new
                 {
                     data = user,
@@ -116,7 +117,7 @@ namespace HelpDeskApi.Controllers
 
         }
 
-    
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] WorkplaceRequest request, int WorkplaceID)
         {
@@ -134,8 +135,6 @@ namespace HelpDeskApi.Controllers
                 }
                 existingData.WorkplaceID = request.WorkplaceID;
                 existingData.UserID = request.UserID;
-                existingData.BranchID = request.BranchID;
-                existingData.CountryID = request.CountryID;
                 existingData.DepartmentID= request.DepartmentID;
 
                 await _context.SaveChangesAsync();
@@ -155,6 +154,7 @@ namespace HelpDeskApi.Controllers
             }
         }
 
+
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] WorkplaceRequest request)
         {
@@ -164,14 +164,11 @@ namespace HelpDeskApi.Controllers
                 {  
                     WorkplaceID = request.WorkplaceID,
                     UserID = request.UserID,
-                    BranchID = request.BranchID,
-                    CountryID = request.CountryID,
                     DepartmentID = request.DepartmentID
                 };
 
                 _context.Workplace.Add(temp);
                 await _context.SaveChangesAsync();
-
 
                 return Ok(new
                 {
@@ -190,7 +187,7 @@ namespace HelpDeskApi.Controllers
         }
 
 
-        [HttpDelete("{id}")]
+       [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             try
@@ -226,3 +223,4 @@ namespace HelpDeskApi.Controllers
         }
     }
 }
+
