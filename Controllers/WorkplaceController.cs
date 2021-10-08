@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using System.Text;
 
+
 namespace HelpDeskApi.Controllers
 {
     [Route("api/[controller]")]
@@ -42,29 +43,41 @@ namespace HelpDeskApi.Controllers
             Console.WriteLine("1");
             try
             {
-                Console.WriteLine("2");
-                var user = await (from cm in _context.Workplace
-                                   join u in _context.Users on cm.Id equals u.Id into cmr
-                                   from cmResult in cmr.DefaultIfEmpty()
-                                  select new {
-                                      cm.Id
-                                  }
-                ).ToListAsync();
+
+               var user = await (from wp in _context.Workplace
+                                  join u in _context.Users on wp.UserID equals u.Id into cmr
+                                  from cmResult in cmr.DefaultIfEmpty()
+                             select new
+                             {      
+                                 //Department 
+                                      wp.WorkplaceID,
+                                      UserID = wp.UserID,
+                                      wp.DepartmentID
+
+
+                             }).ToListAsync();
+                /*
+               if (!String.IsNullOrEmpty(filter.textSearch))
+               {
+                   query = query.Where(q => DbF.Like(q.Name, "%" + filter.textSearch + "%"));
+               }
+               */
+
                 return Ok(new
                 {
+                    
                     data = user,
                     isSuccess = true
                 });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return Ok(new
+                return BadRequest(new
                 {
+                    message = ex,
                     isSuccess = false
                 });
-
             }
-
         }
 
 
@@ -90,6 +103,7 @@ namespace HelpDeskApi.Controllers
                                   }
                             ).ToListAsync();
 
+           
                 return Ok(new
                 {
                     data = user,
@@ -144,6 +158,7 @@ namespace HelpDeskApi.Controllers
             }
         }
 
+
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] WorkplaceRequest request)
         {
@@ -158,7 +173,6 @@ namespace HelpDeskApi.Controllers
 
                 _context.Workplace.Add(temp);
                 await _context.SaveChangesAsync();
-
 
                 return Ok(new
                 {
@@ -177,7 +191,7 @@ namespace HelpDeskApi.Controllers
         }
 
 
-        [HttpDelete("{id}")]
+       [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             try
@@ -213,3 +227,4 @@ namespace HelpDeskApi.Controllers
         }
     }
 }
+
