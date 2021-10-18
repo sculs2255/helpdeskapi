@@ -6,7 +6,7 @@ namespace HelpDeskApi.Models
 {
     public class IncidentCase
     {
-        [Key]
+        [Key]                                                                                                                                                                
         public int ICID { get; set; }
         public int CaseID { get; set; }
         public int? SystemID { get; set; }
