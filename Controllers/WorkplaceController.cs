@@ -45,7 +45,7 @@ namespace HelpDeskApi.Controllers
             {
 
                var user = await (from wp in _context.Workplace
-                                  join u in _context.Users on wp.Id equals u.Id into cmr
+                                  join u in _context.Users on wp.UserID equals u.Id into cmr
                                   from cmResult in cmr.DefaultIfEmpty()
                                   join d1 in _context.Department on wp.DepartmentID equals d1.DepartmentID into cmw
                                   from d in cmw.DefaultIfEmpty()
@@ -57,7 +57,7 @@ namespace HelpDeskApi.Controllers
                              {      
                                  //Workplace join user
                                       wp.WorkplaceID,
-                                      UserID = wp.Id,
+                                      UserID = wp.UserID ,
                                       wp.DepartmentID,
                                 //Department 
                                     BranchID = d.BranchID,
@@ -106,7 +106,7 @@ namespace HelpDeskApi.Controllers
             try
             {
                 var user = await (from wp in _context.Workplace
-                                  join u in _context.Users on wp.Id equals u.Id into cmr
+                                  join u in _context.Users on wp.UserID  equals u.Id into cmr
                                   from cmResult in cmr.DefaultIfEmpty()
                                   where cmResult.Id == id
 
@@ -116,7 +116,7 @@ namespace HelpDeskApi.Controllers
                                   select new
                                   {
                                       wp.WorkplaceID,
-                                      UserID = wp.Id,
+                                      UserID = wp.UserID ,
 
                                       wp.DepartmentID
                                   }
@@ -157,7 +157,7 @@ namespace HelpDeskApi.Controllers
                     });
                 }
                 existingData.WorkplaceID = request.WorkplaceID;
-                existingData.Id = request.Id;
+                existingData.UserID  = request.UserID ;
                 existingData.DepartmentID = request.DepartmentID;
 
                 await _context.SaveChangesAsync();
@@ -186,7 +186,7 @@ namespace HelpDeskApi.Controllers
                 var temp = new Workplace
                 {
                     WorkplaceID = request.WorkplaceID,
-                    Id = request.Id,
+                    UserID  = request.UserID ,
                     DepartmentID = request.DepartmentID
                 };
 
@@ -246,4 +246,3 @@ namespace HelpDeskApi.Controllers
         }
     }
 }
-
