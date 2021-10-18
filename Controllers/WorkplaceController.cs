@@ -45,13 +45,13 @@ namespace HelpDeskApi.Controllers
             {
 
                var user = await (from wp in _context.Workplace
-                                  join u in _context.Users on wp.UserID equals u.Id into cmr
+                                  join u in _context.Users on wp.Id equals u.Id into cmr
                                   from cmResult in cmr.DefaultIfEmpty()
                              select new
                              {      
                                  //Department 
                                       wp.WorkplaceID,
-                                      UserID = wp.UserID,
+                                      UserID = wp.Id,
                                       wp.DepartmentID
 
 

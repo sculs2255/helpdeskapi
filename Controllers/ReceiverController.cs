@@ -119,21 +119,27 @@ namespace HelpDeskApi.Controllers
                 IList<Claim> claim = identity.Claims.ToList();
                 var userInfo = await _userManager.FindByEmailAsync(claim[1].Value);
 
-                var existingData = await _context.Receiver.FindAsync(id);
+                var existingCase = await _context.HD_Case.FindAsync(id);
 
-                if (existingData == null)
+                if (existingCase == null)
                 {
                     return BadRequest(new
                     {
-                        message = "Data NotFound",
+                        message = "CaseData NotFound",
                         isSuccess = false
                     });
                 }
 
-                var CaseID = existingData.CaseID;
-                var existingCase = await _context.HD_Case.FindAsync(CaseID);
+                var CaseID = existingCase.CaseID;
 
-                if (existingCase == null)
+                //Console.WriteLine(existingData.CaseID + "CaseID");
+                // Console.WriteLine(CaseID + "CaseID");
+                // Console.WriteLine(id + "ID");
+
+                var existingData = await _context.Receiver.Where(x => x.CaseID == CaseID).FirstAsync();
+
+            
+                if (existingData == null)
                 {
                     return BadRequest(new
                     {
@@ -149,6 +155,13 @@ namespace HelpDeskApi.Controllers
                     existingData.File = request.File;
 
                     await _context.SaveChangesAsync();
+                    Console.WriteLine("StatusID = "+existingCase.StatusID+" is Complete");
+                }
+                else if (existingCase.StatusID == 3)
+
+                {
+                    await _context.SaveChangesAsync();
+                    Console.WriteLine("StatusID = "+existingCase.StatusID+" is Complete");
                 }
                 else
                 {
@@ -156,6 +169,8 @@ namespace HelpDeskApi.Controllers
                     existingData.UserID = userInfo.Id;
 
                     await _context.SaveChangesAsync();
+                     Console.WriteLine("StatusID = "+existingCase.StatusID+" is In Progress");
+                     Console.WriteLine("Receiver is "+ existingData.UserID);
                 }
 
                 return Ok(new
