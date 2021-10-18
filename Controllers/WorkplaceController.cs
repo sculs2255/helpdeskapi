@@ -47,12 +47,31 @@ namespace HelpDeskApi.Controllers
                var user = await (from wp in _context.Workplace
                                   join u in _context.Users on wp.Id equals u.Id into cmr
                                   from cmResult in cmr.DefaultIfEmpty()
+                                  join d1 in _context.Department on wp.DepartmentID equals d1.DepartmentID into cmw
+                                  from d in cmw.DefaultIfEmpty()
+                                  join b1 in _context.Branch on wp.BranchID equals b1.BranchID into cmb
+                                  from b in cmb.DefaultIfEmpty()
+                                  join c1 in _context.Country on wp.CountryID equals c1.CountryID into cmc
+                                  from c in cmc.DefaultIfEmpty()
                              select new
                              {      
-                                 //Department 
+                                 //Workplace join user
                                       wp.WorkplaceID,
                                       UserID = wp.Id,
-                                      wp.DepartmentID
+                                      wp.DepartmentID,
+                                //Department 
+                                    BranchID = d.BranchID,
+                                    DepartName = d.DepartmentName,
+                                
+                                //Branch
+                                    BranchName= b.BranchName,
+
+                                //country 
+                                    CountryName = c.CountryName,
+
+                                    
+
+                                    
 
 
                              }).ToListAsync();
