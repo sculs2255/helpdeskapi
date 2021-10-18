@@ -1,15 +1,18 @@
-﻿using HelpDeskApi.Data;
-using HelpDeskApi.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using HelpDeskApi.Data;
+using HelpDeskApi.Models;
 using HelpDeskApi.Models.DTOs.Requests;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
+using System.Text;
 
 namespace HelpDeskApi.Controllers
 {
@@ -18,10 +21,16 @@ namespace HelpDeskApi.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class CaseController : ControllerBase
     {
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly DataContext _context;
-        public CaseController(DataContext context)
+        public CaseController(UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager,
+            DataContext context)
         {
             _context = context;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         [HttpGet]
@@ -131,6 +140,10 @@ namespace HelpDeskApi.Controllers
         {
             try
             {
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                IList<Claim> claim = identity.Claims.ToList();
+                var userInfo = await _userManager.FindByEmailAsync(claim[1].Value);
+
                 var existingData = await _context.HD_Case.FindAsync(id);
                 if (existingData.CaseTypeID == 1)
                 {

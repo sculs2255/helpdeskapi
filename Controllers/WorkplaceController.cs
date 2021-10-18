@@ -36,10 +36,11 @@ namespace HelpDeskApi.Controllers
             _roleManager = roleManager;
         }
 
-      
         [HttpGet]
-              public async Task<IActionResult> List ()
+         [Route("List")]
+        public async Task<ActionResult> List()
         {
+            Console.WriteLine("1");
             try
             {
 
@@ -97,23 +98,26 @@ namespace HelpDeskApi.Controllers
                 });
             }
         }
-[HttpGet("{id}")]
-        public async Task<IActionResult> Details (string id)
+
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Details(string id)
         {
             try
             {
                 var user = await (from wp in _context.Workplace
-                                  join u in _context.Users on wp.UserID equals u.Id into cmr
+                                  join u in _context.Users on wp.Id equals u.Id into cmr
                                   from cmResult in cmr.DefaultIfEmpty()
-                                  where cmResult.Id == id 
-                                  
-                                      // join cm in _context.Users on u.Id equals cm.UserID into cr
-                                      // from crResult in cr.DefaultIfEmpty()
-                                  
+                                  where cmResult.Id == id
+
+                                  // join cm in _context.Users on u.Id equals cm.UserID into cr
+                                  // from crResult in cr.DefaultIfEmpty()
+
                                   select new
                                   {
                                       wp.WorkplaceID,
-                                      UserID = wp.UserID,
+                                      UserID = wp.Id,
+
                                       wp.DepartmentID
                                   }
                             ).ToListAsync();
@@ -153,8 +157,8 @@ namespace HelpDeskApi.Controllers
                     });
                 }
                 existingData.WorkplaceID = request.WorkplaceID;
-                existingData.UserID = request.UserID;
-                existingData.DepartmentID= request.DepartmentID;
+                existingData.Id = request.Id;
+                existingData.DepartmentID = request.DepartmentID;
 
                 await _context.SaveChangesAsync();
 
@@ -180,9 +184,9 @@ namespace HelpDeskApi.Controllers
             try
             {
                 var temp = new Workplace
-                {  
+                {
                     WorkplaceID = request.WorkplaceID,
-                    UserID = request.UserID,
+                    Id = request.Id,
                     DepartmentID = request.DepartmentID
                 };
 
