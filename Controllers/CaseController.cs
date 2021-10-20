@@ -357,6 +357,8 @@ namespace HelpDeskApi.Controllers
                     CaseID = temp.CaseID,
                     UserID = userInfo.Id
                 };
+                 _context.Informer.Add(tempInformer);
+                await _context.SaveChangesAsync();
 
                 var tempReceiver = new Receiver
                 {

@@ -133,12 +133,12 @@ namespace HelpDeskApi.Controllers
                 var CaseID = existingCase.CaseID;
 
                 //Console.WriteLine(existingData.CaseID + "CaseID");
-                // Console.WriteLine(CaseID + "CaseID");
-                // Console.WriteLine(id + "ID");
+                Console.WriteLine(CaseID + "CaseID");
+                Console.WriteLine(id + "ID");
 
                 var existingData = await _context.Receiver.Where(x => x.CaseID == CaseID).FirstAsync();
+                //Console.WriteLine(existingData.CaseID + "CaseID");
 
-            
                 if (existingData == null)
                 {
                     return BadRequest(new
@@ -150,32 +150,37 @@ namespace HelpDeskApi.Controllers
 
                 if (existingCase.StatusID == 2)
                 {
+
                     existingCase.StatusID = 3;
                     existingData.Description = request.Description;
                     existingData.File = request.File;
 
                     await _context.SaveChangesAsync();
-                    Console.WriteLine("StatusID = "+existingCase.StatusID+" is Complete");
+                    Console.WriteLine("StatusID = " + existingCase.StatusID + " is Complete");
                 }
                 else if (existingCase.StatusID == 3)
 
                 {
+
+                    existingCase.StatusID = 2;
                     await _context.SaveChangesAsync();
-                    Console.WriteLine("StatusID = "+existingCase.StatusID+" is Complete");
+                    Console.WriteLine("StatusID = " + existingCase.StatusID + " is In Progress");
                 }
                 else
                 {
+
                     existingCase.StatusID = 2;
                     existingData.UserID = userInfo.Id;
 
                     await _context.SaveChangesAsync();
-                     Console.WriteLine("StatusID = "+existingCase.StatusID+" is In Progress");
-                     Console.WriteLine("Receiver is "+ existingData.UserID);
+                    Console.WriteLine("StatusID = " + existingCase.StatusID + " is In Progress");
+                    Console.WriteLine("Receiver is " + existingData.UserID);
                 }
 
                 return Ok(new
                 {
                     data = CaseID,
+                    status = existingCase.StatusID,
                     isSuccess = true
                 });
             }
