@@ -345,7 +345,8 @@ namespace HelpDeskApi.Controllers
                     CaseTypeID = request.CaseTypeID,
                     CaseDate = DateTime.Now,
                     PriorityID = request.PriorityID,
-                    StatusID = request.StatusID
+                    StatusID = request.StatusID,
+                    CreatedBy = userInfo.Id
                 };
                 Console.WriteLine(request.CaseID);
 
@@ -357,6 +358,9 @@ namespace HelpDeskApi.Controllers
                     CaseID = temp.CaseID,
                     UserID = userInfo.Id
                 };
+                  _context.Informer.Add(tempInformer);
+                await _context.SaveChangesAsync();
+
 
                 var tempReceiver = new Receiver
                 {

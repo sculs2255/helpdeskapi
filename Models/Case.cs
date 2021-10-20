@@ -9,6 +9,10 @@ namespace HelpDeskApi.Models
         public DateTime? CaseDate { get; set; } 
         public int PriorityID { get; set; } 
         public int StatusID { get; set; } 
+
+        public string CreatedBy { get; set; } 
+
+        
         
     }
 }

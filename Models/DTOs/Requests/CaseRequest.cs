@@ -20,6 +20,8 @@ namespace HelpDeskApi.Models
         public string File { get; set; }
         public string Note { get; set; }
         public string CCMail { get; set; }
+
+       
         
     }
 }
