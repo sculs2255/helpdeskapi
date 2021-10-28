@@ -61,14 +61,14 @@ namespace HelpDeskApi.Controllers
                                       UserID = cmResult.Id,
                                       wp.DepartmentID,
                                 //Department 
-                                    BranchID = d.BranchID,
-                                    DepartName = d.DepartmentName,
-                                
+                                BranchID = d.BranchID,
+                                DepartName = d.DepartmentName,
+
                                 //Branch
-                                    BranchName= b.BranchName,
+                                BranchName = b.BranchName,
 
                                 //country 
-                                    CountryName = c.CountryName,
+                                CountryName = c.CountryName,
 
                              });
                 var DbF = Microsoft.EntityFrameworkCore.EF.Functions;
@@ -114,7 +114,7 @@ namespace HelpDeskApi.Controllers
                     
                 return Ok(new
                 {
-                    
+
                     data = user,
                     isSuccess = true
                 });
@@ -136,7 +136,7 @@ namespace HelpDeskApi.Controllers
             try
             {
                 var user = await (from wp in _context.Workplace
-                                  join u in _context.Users on wp.UserID  equals u.Id into cmr
+                                  join u in _context.Users on wp.UserID equals u.Id into cmr
                                   from cmResult in cmr.DefaultIfEmpty()
                                   where cmResult.Id == id
 
@@ -154,7 +154,7 @@ namespace HelpDeskApi.Controllers
                                   }
                             ).ToListAsync();
 
-           
+
                 return Ok(new
                 {
                     data = user,
@@ -189,7 +189,7 @@ namespace HelpDeskApi.Controllers
                     });
                 }
                 existingData.WorkplaceID = request.WorkplaceID;
-                existingData.UserID  = request.UserID ;
+                existingData.UserID = request.UserID;
                 existingData.DepartmentID = request.DepartmentID;
                 existingData.CountryID = request.CountryID;
                 existingData.BranchID = request.BranchID;
@@ -247,7 +247,7 @@ namespace HelpDeskApi.Controllers
         }
 
 
-       [HttpDelete("{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             try

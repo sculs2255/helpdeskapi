@@ -86,6 +86,9 @@ namespace HelpDeskApi.Controllers
                              {
                                  re.ReceiverID,
                                  re.CaseID,
+                                 re.ReceiverDate,
+                                 re.Description,
+                                 re.File,
                                  firstName = u.FirstName,
                                  lastName = u.LastName,
                                  phone = u.PhoneNumber,
@@ -157,6 +160,7 @@ namespace HelpDeskApi.Controllers
 
                     await _context.SaveChangesAsync();
                     Console.WriteLine("StatusID = " + existingCase.StatusID + " is Complete");
+                    Console.WriteLine("Description = " + existingData.Description);
                 }
                 else if (existingCase.StatusID == 3)
 
@@ -170,6 +174,7 @@ namespace HelpDeskApi.Controllers
                 {
 
                     existingCase.StatusID = 2;
+                    existingData.ReceiverDate = DateTime.Now;
                     existingData.UserID = userInfo.Id;
 
                     await _context.SaveChangesAsync();
