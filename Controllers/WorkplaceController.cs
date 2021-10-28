@@ -38,15 +38,16 @@ namespace HelpDeskApi.Controllers
 
         [HttpGet]
          [Route("List")]
-        public async Task<ActionResult> List()
+        public async Task<ActionResult> List([FromQuery] WorkplaceFilter filter)
         {
             Console.WriteLine("1");
             try
             {
 
-               var user = await (from wp in _context.Workplace
+               var user = (from wp in _context.Workplace
                                   join u in _context.Users on wp.UserID equals u.Id into cmr
                                   from cmResult in cmr.DefaultIfEmpty()
+                                  
                                   join d1 in _context.Department on wp.DepartmentID equals d1.DepartmentID into cmw
                                   from d in cmw.DefaultIfEmpty()
                                   join b1 in _context.Branch on wp.BranchID equals b1.BranchID into cmb
@@ -57,7 +58,7 @@ namespace HelpDeskApi.Controllers
                              {      
                                  //Workplace join user
                                       wp.WorkplaceID,
-                                      UserID = wp.UserID ,
+                                      UserID = cmResult.Id,
                                       wp.DepartmentID,
                                 //Department 
                                     BranchID = d.BranchID,
@@ -69,19 +70,48 @@ namespace HelpDeskApi.Controllers
                                 //country 
                                     CountryName = c.CountryName,
 
-                                    
+                             });
+                var DbF = Microsoft.EntityFrameworkCore.EF.Functions;
 
-                                    
+                 if (filter.UserID != null)
+                {
+                   user = user.Where(q => q.UserID == filter.UserID);
+                }
 
+                switch (filter.sortOrder)
+                {
+                    case "WorkplaceID":
+                        user= user.OrderBy(q => q.WorkplaceID);
+                        break;
+                    case "WorkplaceID_desc":
+                        user = user.OrderByDescending(q => q.WorkplaceID);
+                        break;
+                    case "priorityID":
+                        user = user.OrderBy(q => q.WorkplaceID);
+                        break;
+                    case "priorityID_desc":
+                        user = user.OrderByDescending(q => q.WorkplaceID);
+                        break;   
+                        
+                    default:
+                        user = user = user.OrderBy(q => q.WorkplaceID);
+                        break;
+                }
 
-                             }).ToListAsync();
+                int totalItems = user.Count();
+                var data = await user.Skip((filter.pageNumber - 1) * filter.pageSize).Take(filter.pageSize).ToListAsync();
+
+               
+              
+
+                
                 /*
                if (!String.IsNullOrEmpty(filter.textSearch))
                {
                    query = query.Where(q => DbF.Like(q.Name, "%" + filter.textSearch + "%"));
                }
                */
-
+                    
                 return Ok(new
                 {
                     
@@ -117,8 +147,10 @@ namespace HelpDeskApi.Controllers
                                   {
                                       wp.WorkplaceID,
                                       UserID = wp.UserID ,
+                                      wp.DepartmentID,
+                                      wp.CountryID,
+                                      wp.BranchID
 
-                                      wp.DepartmentID
                                   }
                             ).ToListAsync();
 
@@ -159,6 +191,9 @@ namespace HelpDeskApi.Controllers
                 existingData.WorkplaceID = request.WorkplaceID;
                 existingData.UserID  = request.UserID ;
                 existingData.DepartmentID = request.DepartmentID;
+                existingData.CountryID = request.CountryID;
+                existingData.BranchID = request.BranchID;
+                
 
                 await _context.SaveChangesAsync();
 
@@ -187,7 +222,9 @@ namespace HelpDeskApi.Controllers
                 {
                     WorkplaceID = request.WorkplaceID,
                     UserID  = request.UserID ,
-                    DepartmentID = request.DepartmentID
+                    DepartmentID = request.DepartmentID,
+                    CountryID = request.CountryID,
+                    BranchID = request.BranchID
                 };
 
                 _context.Workplace.Add(temp);

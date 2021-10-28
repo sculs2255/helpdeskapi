@@ -21,6 +21,8 @@ namespace HelpDeskApi.Models
         public string Note { get; set; }
         public string CCMail { get; set; }
 
+        public int WorkplaceID { get; set; }
+
        
         
     }

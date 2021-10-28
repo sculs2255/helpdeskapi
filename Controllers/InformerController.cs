@@ -77,6 +77,8 @@ namespace HelpDeskApi.Controllers
                              join c1 in _context.HD_Case on inf.CaseID equals c1.CaseID into c2
                              from c in c2.DefaultIfEmpty()
                              where inf.UserID == u.Id && inf.CaseID == c.CaseID && existingData.CaseID == inf.CaseID
+                             join d1 in _context.Workplace on inf.WorkplaceID equals d1.WorkplaceID into cmw
+                             from d in cmw.DefaultIfEmpty()
 
                              // join cm in _context.Users on u.Id equals cm.UserID into cr
                              // from crResult in cr.DefaultIfEmpty()
@@ -88,7 +90,10 @@ namespace HelpDeskApi.Controllers
                                  firstName = u.FirstName,
                                  lastName = u.LastName,
                                  phone = u.PhoneNumber,
-                                 email = u.Email
+                                 email = u.Email,
+                                 WorkplaceID = d.WorkplaceID,
+                                 
+
                              }
                             );
                 var receiver = await query.FirstOrDefaultAsync();

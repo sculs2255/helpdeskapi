@@ -356,7 +356,9 @@ namespace HelpDeskApi.Controllers
                 var tempInformer = new Informer
                 {
                     CaseID = temp.CaseID,
-                    UserID = userInfo.Id
+                    UserID = userInfo.Id,
+                    WorkplaceID = request.WorkplaceID
+                    
                 };
                  _context.Informer.Add(tempInformer);
                 await _context.SaveChangesAsync();

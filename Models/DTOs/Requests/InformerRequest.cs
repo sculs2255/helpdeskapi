@@ -10,6 +10,8 @@ namespace HelpDeskApi.Models
         public int CaseID { get; set; }
         public string UserID { get; set; }
 
+        public int WorkplaceID { get; set; } 
+
 
     }
 }

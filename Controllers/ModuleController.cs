@@ -46,15 +46,6 @@ namespace HelpDeskApi.Controllers
                     query = query.Where(q => q.SystemID == filter.SystemID);
                 }
 
-                /*
-               if (!String.IsNullOrEmpty(filter.textSearch))
-               {
-                   query = query.Where(q => DbF.Like(q.Name, "%" + filter.textSearch + "%"));
-               }
-               */
-
-       
-
                 switch (filter.sortOrder)
                 {
                     case "moduleCode":
