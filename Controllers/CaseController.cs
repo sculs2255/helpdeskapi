@@ -161,6 +161,10 @@ namespace HelpDeskApi.Controllers
                                  from re in re2.DefaultIfEmpty()
                                  join inf1 in _context.Informer on c.CaseID equals inf1.CaseID into inf2
                                  from inf in inf2.DefaultIfEmpty()
+                                 join mod1 in _context.Module on ic.ModuleID equals mod1.ModuleID into mod2
+                                 from mod in mod2.DefaultIfEmpty()
+                                 join sys1 in _context.HDSystem on ic.SystemID equals sys1.SystemID into sys2
+                                 from sys in sys2.DefaultIfEmpty()
                                  where c.CaseID == existingData.CaseID && c.CaseID == ic.CaseID && c.CaseID == inf.CaseID
                                  select new
                                  {
@@ -172,7 +176,9 @@ namespace HelpDeskApi.Controllers
                                      c.StatusID,
                                      //IncidentCase data
                                      SystemID = ic.SystemID,
+                                     SystemName = sys.SystemName,
                                      ModuleID = ic.ModuleID,
+                                     ModuleName = mod.ModuleCode,
                                      ProgramID = ic.ProgramID,
                                      Topic = ic.Topic,
                                      Description = ic.Description,
@@ -202,6 +208,10 @@ namespace HelpDeskApi.Controllers
                                  from re in re2.DefaultIfEmpty()
                                  join inf1 in _context.Informer on c.CaseID equals inf1.CaseID into inf2
                                  from inf in inf2.DefaultIfEmpty()
+                                 join sys1 in _context.HDSystem on rc.SystemID equals sys1.SystemID into sys2
+                                 from sys in sys2.DefaultIfEmpty()
+                                 join tp1 in _context.Topic on rc.TopicID equals tp1.TopicID into tp2
+                                 from tp in tp2.DefaultIfEmpty()
                                  where c.CaseID == existingData.CaseID && c.CaseID == rc.CaseID && c.CaseID == inf.CaseID
                                  select new
                                  {
@@ -213,7 +223,9 @@ namespace HelpDeskApi.Controllers
                                      c.StatusID,
                                      //RequestCase data
                                      SystemID = rc.SystemID,
+                                     SystemName = sys.SystemName,
                                      TopicID = rc.TopicID,
+                                     TopicName = tp.TopicName,
                                      Description = rc.Description,
                                      File = rc.File,
                                      Note = rc.Note,
@@ -358,7 +370,7 @@ namespace HelpDeskApi.Controllers
                     CaseID = temp.CaseID,
                     UserID = userInfo.Id
                 };
-                 _context.Informer.Add(tempInformer);
+                _context.Informer.Add(tempInformer);
                 await _context.SaveChangesAsync();
 
                 var tempReceiver = new Receiver

@@ -9,9 +9,6 @@ namespace HelpDeskApi.Models.DTOs.Requests
 
         public string UserID {get; set;}
        
-        public int? CountryID { get; set; } 
-        public int?  	BranchID { get; set; } 
-        public int? DepartmentID { get; set; } 
         
     }
 }

@@ -37,54 +37,78 @@ namespace HelpDeskApi.Controllers
         }
 
         [HttpGet]
-         [Route("List")]
-        public async Task<ActionResult> List()
+        [Route("List")]
+        public async Task<ActionResult> List([FromQuery] WorkplaceFilter filter)
         {
             Console.WriteLine("1");
             try
             {
 
-               var user = await (from wp in _context.Workplace
-                                  join u in _context.Users on wp.UserID equals u.Id into cmr
-                                  from cmResult in cmr.DefaultIfEmpty()
-                                  join d1 in _context.Department on wp.DepartmentID equals d1.DepartmentID into cmw
-                                  from d in cmw.DefaultIfEmpty()
-                                  join b1 in _context.Branch on wp.BranchID equals b1.BranchID into cmb
-                                  from b in cmb.DefaultIfEmpty()
-                                  join c1 in _context.Country on wp.CountryID equals c1.CountryID into cmc
-                                  from c in cmc.DefaultIfEmpty()
-                             select new
-                             {      
-                                 //Workplace join user
-                                      wp.WorkplaceID,
-                                      UserID = wp.UserID ,
-                                      wp.DepartmentID,
+                var user = (from wp in _context.Workplace
+                            join u in _context.Users on wp.UserID equals u.Id into cmr
+                            from cmResult in cmr.DefaultIfEmpty()
+                            join d1 in _context.Department on wp.DepartmentID equals d1.DepartmentID into cmw
+                            from d in cmw.DefaultIfEmpty()
+                            join b1 in _context.Branch on wp.BranchID equals b1.BranchID into cmb
+                            from b in cmb.DefaultIfEmpty()
+                            join c1 in _context.Country on wp.CountryID equals c1.CountryID into cmc
+                            from c in cmc.DefaultIfEmpty()
+                            select new
+                            {
+                                //Workplace join user
+                                wp.WorkplaceID,
+                                UserID = wp.UserID,
+                                wp.DepartmentID,
                                 //Department 
-                                    BranchID = d.BranchID,
-                                    DepartName = d.DepartmentName,
-                                
+                                BranchID = d.BranchID,
+                                DepartName = d.DepartmentName,
+
                                 //Branch
-                                    BranchName= b.BranchName,
+                                BranchName = b.BranchName,
 
                                 //country 
-                                    CountryName = c.CountryName,
+                                CountryName = c.CountryName,
 
-                                    
+                            });
 
-                                    
+                var DbF = Microsoft.EntityFrameworkCore.EF.Functions;
 
+                if (filter.UserID != null)
+                {
+                    user = user.Where(q => q.UserID == filter.UserID);
+                }
 
-                             }).ToListAsync();
                 /*
-               if (!String.IsNullOrEmpty(filter.textSearch))
-               {
-                   query = query.Where(q => DbF.Like(q.Name, "%" + filter.textSearch + "%"));
-               }
-               */
+                if (!String.IsNullOrEmpty(filter.textSearch))
+                {
+                    query = query.Where(q => DbF.Like(q.Name, "%" + filter.textSearch + "%"));
+                }
+                */
+
+                switch (filter.sortOrder)
+                {
+                    case "WorkplaceID":
+                        user = user.OrderBy(q => q.WorkplaceID);
+                        break;
+                    case "WorkplaceID_desc":
+                        user = user.OrderByDescending(q => q.WorkplaceID);
+                        break;
+                    case "UserID_desc":
+                        user = user.OrderByDescending(q => q.UserID);
+                        break;
+                    default:
+                        user = user = user.OrderBy(q => q.UserID);
+                        break;
+                }
+
+                int totalItems = user.Count();
+                var data = await user.Skip((filter.pageNumber - 1) * filter.pageSize).Take(filter.pageSize).ToListAsync();
+
+ 
 
                 return Ok(new
                 {
-                    
+
                     data = user,
                     isSuccess = true
                 });
@@ -106,7 +130,7 @@ namespace HelpDeskApi.Controllers
             try
             {
                 var user = await (from wp in _context.Workplace
-                                  join u in _context.Users on wp.UserID  equals u.Id into cmr
+                                  join u in _context.Users on wp.UserID equals u.Id into cmr
                                   from cmResult in cmr.DefaultIfEmpty()
                                   where cmResult.Id == id
 
@@ -116,13 +140,13 @@ namespace HelpDeskApi.Controllers
                                   select new
                                   {
                                       wp.WorkplaceID,
-                                      UserID = wp.UserID ,
+                                      UserID = wp.UserID,
 
                                       wp.DepartmentID
                                   }
                             ).ToListAsync();
 
-           
+
                 return Ok(new
                 {
                     data = user,
@@ -157,7 +181,7 @@ namespace HelpDeskApi.Controllers
                     });
                 }
                 existingData.WorkplaceID = request.WorkplaceID;
-                existingData.UserID  = request.UserID ;
+                existingData.UserID = request.UserID;
                 existingData.DepartmentID = request.DepartmentID;
 
                 await _context.SaveChangesAsync();
@@ -186,7 +210,7 @@ namespace HelpDeskApi.Controllers
                 var temp = new Workplace
                 {
                     WorkplaceID = request.WorkplaceID,
-                    UserID  = request.UserID ,
+                    UserID = request.UserID,
                     DepartmentID = request.DepartmentID
                 };
 
@@ -210,7 +234,7 @@ namespace HelpDeskApi.Controllers
         }
 
 
-       [HttpDelete("{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             try
