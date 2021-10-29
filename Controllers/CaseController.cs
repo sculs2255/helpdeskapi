@@ -51,6 +51,8 @@ namespace HelpDeskApi.Controllers
                              from inf in inf2.DefaultIfEmpty()
                              join u1 in _context.Users on inf.UserID equals u1.Id into u2
                              from u in u2.DefaultIfEmpty()
+                             join ru1 in _context.Users on re.UserID equals ru1.Id into ru2
+                             from ru in ru2.DefaultIfEmpty()
                                  //  where re.UserID == u.CaseID
                              select new
                              {
@@ -80,10 +82,10 @@ namespace HelpDeskApi.Controllers
                                  ReDescription = re.Description,
                                  ReFile = re.File,
                                  ReUserID = re.UserID,
+                                 ReName = ru.FirstName + " " + ru.LastName,
 
-                                 firstName = u.FirstName,
-                                 lastName = u.LastName,
-                                 Informer = inf.UserID
+                                 Informer = inf.UserID,
+                                 UserName = u.FirstName + " " + u.LastName
                              });
                 // var data = await query.FirstOrDefaultAsync();
 
@@ -169,6 +171,8 @@ namespace HelpDeskApi.Controllers
                              from inf in inf2.DefaultIfEmpty()
                              join u1 in _context.Users on inf.UserID equals u1.Id into u2
                              from u in u2.DefaultIfEmpty()
+                             join ru1 in _context.Users on re.UserID equals ru1.Id into ru2
+                             from ru in ru2.DefaultIfEmpty()
                              where re.UserID == userInfo.Id || inf.UserID == userInfo.Id
                              select new
                              {
@@ -198,10 +202,10 @@ namespace HelpDeskApi.Controllers
                                  ReDescription = re.Description,
                                  ReFile = re.File,
                                  ReUserID = re.UserID,
+                                 ReName = ru.FirstName + " " + ru.LastName,
 
-                                 firstName = u.FirstName,
-                                 lastName = u.LastName,
-                                 Informer = inf.UserID
+                                 Informer = inf.UserID,
+                                 UserName = u.FirstName + " " + u.LastName
                              });
 
                 var DbF = Microsoft.EntityFrameworkCore.EF.Functions;
@@ -273,7 +277,7 @@ namespace HelpDeskApi.Controllers
                                  from mod in mod2.DefaultIfEmpty()
                                  join sys1 in _context.HDSystem on ic.SystemID equals sys1.SystemID into sys2
                                  from sys in sys2.DefaultIfEmpty()
-                                
+
                                  where c.CaseID == existingData.CaseID && c.CaseID == ic.CaseID && c.CaseID == inf.CaseID
                                  select new
                                  {
@@ -301,7 +305,7 @@ namespace HelpDeskApi.Controllers
 
                                      Informer = inf.UserID,
 
-                                 
+
                                  });
                     var dataIc = await query.FirstOrDefaultAsync();
                     return Ok(new
@@ -323,7 +327,7 @@ namespace HelpDeskApi.Controllers
                                  from sys in sys2.DefaultIfEmpty()
                                  join tp1 in _context.Topic on rc.TopicID equals tp1.TopicID into tp2
                                  from tp in tp2.DefaultIfEmpty()
-                       
+
                                  where c.CaseID == existingData.CaseID && c.CaseID == rc.CaseID && c.CaseID == inf.CaseID
                                  select new
                                  {
