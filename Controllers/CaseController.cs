@@ -115,11 +115,14 @@ namespace HelpDeskApi.Controllers
                     case "priorityID_desc":
                         query = query.OrderByDescending(q => q.PriorityID);
                         break;
+                    case "caseID":
+                        query = query.OrderBy(q => q.CaseID);
+                        break;
                     case "caseID_desc":
                         query = query.OrderByDescending(q => q.CaseID);
                         break;
                     default:
-                        query = query = query.OrderBy(q => q.CaseID);
+                        query = query = query.OrderByDescending(q => q.CaseID);
                         break;
                 }
 
@@ -144,6 +147,111 @@ namespace HelpDeskApi.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("List")]
+        public async Task<ActionResult> MyList([FromQuery] CaseFilter filter)
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            IList<Claim> claim = identity.Claims.ToList();
+            var userInfo = await _userManager.FindByEmailAsync(claim[1].Value);
+
+            try
+            {
+                //Linq Left Join
+                var query = (from c in _context.HD_Case
+                             join ic1 in _context.IncidentCase on c.CaseID equals ic1.CaseID into ic2
+                             from ic in ic2.DefaultIfEmpty()
+                             join rc1 in _context.RequestCase on c.CaseID equals rc1.CaseID into rc2
+                             from rc in rc2.DefaultIfEmpty()
+                             join re1 in _context.Receiver on c.CaseID equals re1.CaseID into re2
+                             from re in re2.DefaultIfEmpty()
+                             join inf1 in _context.Informer on c.CaseID equals inf1.CaseID into inf2
+                             from inf in inf2.DefaultIfEmpty()
+                             join u1 in _context.Users on inf.UserID equals u1.Id into u2
+                             from u in u2.DefaultIfEmpty()
+                             where re.UserID == userInfo.Id || inf.UserID == userInfo.Id
+                             select new
+                             {
+                                 //HD_Case data
+                                 c.CaseID,
+                                 c.CaseTypeID,
+                                 c.CaseDate,
+                                 c.PriorityID,
+                                 c.StatusID,
+                                 //IncidentCase data
+                                 IcSystemID = ic.SystemID,
+                                 IcModuleID = ic.ModuleID,
+                                 IcProgramID = ic.ProgramID,
+                                 IcTopic = ic.Topic,
+                                 IcDescription = ic.Description,
+                                 IcFile = ic.File,
+                                 IcNote = ic.Note,
+                                 IcCCMail = ic.CCMail,
+                                 //RequestCase data
+                                 RcSystemID = rc.SystemID,
+                                 RcTopicID = rc.TopicID,
+                                 RcDescription = rc.Description,
+                                 RcFile = rc.File,
+                                 RcNote = rc.Note,
+                                 RcCCMail = rc.CCMail,
+                                 //Receiver data
+                                 ReDescription = re.Description,
+                                 ReFile = re.File,
+                                 ReUserID = re.UserID,
+
+                                 firstName = u.FirstName,
+                                 lastName = u.LastName,
+                                 Informer = inf.UserID
+                             });
+
+                var DbF = Microsoft.EntityFrameworkCore.EF.Functions;
+
+                if (filter.caseTypeID > 0)
+                {
+                    query = query.Where(q => q.CaseTypeID == filter.caseTypeID);
+                }
+
+                switch (filter.sortOrder)
+                {
+                    case "priorityID":
+                        query = query.OrderBy(q => q.PriorityID);
+                        break;
+                    case "priorityID_desc":
+                        query = query.OrderByDescending(q => q.PriorityID);
+                        break;
+                    case "caseID":
+                        query = query.OrderBy(q => q.CaseID);
+                        break;
+                    case "caseID_desc":
+                        query = query.OrderByDescending(q => q.CaseID);
+                        break;
+                    default:
+                        query = query = query.OrderByDescending(q => q.CaseDate);
+                        break;
+                }
+
+                int totalItems = query.Count();
+                var data = await query.Skip((filter.pageNumber - 1) * filter.pageSize).Take(filter.pageSize).ToListAsync();
+
+                return Ok(new
+                {
+                    totalItems = totalItems,
+                    data = data,
+                    filter = filter,
+                    isSuccess = true
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    message = ex,
+                    isSuccess = false
+                });
+            }
+        }
+
+
         [HttpGet("{id}")]
         public async Task<IActionResult> Details(int id)
         {
@@ -165,6 +273,7 @@ namespace HelpDeskApi.Controllers
                                  from mod in mod2.DefaultIfEmpty()
                                  join sys1 in _context.HDSystem on ic.SystemID equals sys1.SystemID into sys2
                                  from sys in sys2.DefaultIfEmpty()
+                                
                                  where c.CaseID == existingData.CaseID && c.CaseID == ic.CaseID && c.CaseID == inf.CaseID
                                  select new
                                  {
@@ -190,7 +299,9 @@ namespace HelpDeskApi.Controllers
                                      ReFile = re.File,
                                      ReUserID = re.UserID,
 
-                                     Informer = inf.UserID
+                                     Informer = inf.UserID,
+
+                                 
                                  });
                     var dataIc = await query.FirstOrDefaultAsync();
                     return Ok(new
@@ -212,6 +323,7 @@ namespace HelpDeskApi.Controllers
                                  from sys in sys2.DefaultIfEmpty()
                                  join tp1 in _context.Topic on rc.TopicID equals tp1.TopicID into tp2
                                  from tp in tp2.DefaultIfEmpty()
+                       
                                  where c.CaseID == existingData.CaseID && c.CaseID == rc.CaseID && c.CaseID == inf.CaseID
                                  select new
                                  {
@@ -235,7 +347,8 @@ namespace HelpDeskApi.Controllers
                                      ReFile = re.File,
                                      ReUserID = re.UserID,
 
-                                     Informer = inf.UserID
+                                     Informer = inf.UserID,
+
 
                                  });
                     var dataRc = await query.FirstOrDefaultAsync();
@@ -321,7 +434,16 @@ namespace HelpDeskApi.Controllers
                     });
                 }
 
-                existingData.StatusID = request.StatusID;
+                existingData.StatusID = 4;
+
+                var tempCancel = new Cancel
+                {
+                    CaseID = id,
+                    Reason = request.Reason,
+                    CancelDate = DateTime.Now
+
+                };
+                _context.Cancel.Add(tempCancel);
 
                 await _context.SaveChangesAsync();
 
@@ -370,7 +492,7 @@ namespace HelpDeskApi.Controllers
                     CaseID = temp.CaseID,
                     UserID = userInfo.Id,
                     WorkplaceID = request.WorkplaceID
-                    
+
                 };
                 _context.Informer.Add(tempInformer);
                 await _context.SaveChangesAsync();

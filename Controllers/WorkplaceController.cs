@@ -85,14 +85,7 @@ namespace HelpDeskApi.Controllers
                         break;
                     case "WorkplaceID_desc":
                         user = user.OrderByDescending(q => q.WorkplaceID);
-                        break;
-                    case "priorityID":
-                        user = user.OrderBy(q => q.WorkplaceID);
-                        break;
-                    case "priorityID_desc":
-                        user = user.OrderByDescending(q => q.WorkplaceID);
-                        break;   
-                        
+                        break; 
                     default:
                         user = user = user.OrderBy(q => q.WorkplaceID);
                         break;

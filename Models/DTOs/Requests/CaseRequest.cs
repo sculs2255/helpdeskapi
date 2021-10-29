@@ -22,6 +22,8 @@ namespace HelpDeskApi.Models
         public string CCMail { get; set; }
 
         public int WorkplaceID { get; set; }
+        public string Reason { get; set; }
+        public DateTime CancelDate { get; set; }
 
        
         

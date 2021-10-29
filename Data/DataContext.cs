@@ -24,6 +24,7 @@ namespace HelpDeskApi.Data
         public DbSet<Workplace> Workplace { get; set; }
         public DbSet<Receiver> Receiver { get; set; }
         public DbSet<Informer> Informer { get; set; }
+         public DbSet<Cancel> Cancel { get; set; }
 
 
 

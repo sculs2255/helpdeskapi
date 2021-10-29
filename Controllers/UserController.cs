@@ -35,7 +35,7 @@ namespace HelpDeskApi.Controllers
             _roleManager = roleManager;
         }
 
-        
+
         [HttpGet]
         [Route("GetUserList")]
         public async Task<ActionResult> GetUserList()
@@ -48,32 +48,34 @@ namespace HelpDeskApi.Controllers
             {
                 if (userRole[0] == "Admin")
                 {
-                   
-                    var user =  await (from u in _context.Users
-                                join ur in _context.UserRoles on u.Id equals ur.UserId into urs
-                                from urResult in urs.DefaultIfEmpty()
 
-                                join r in _context.Roles on  urResult.RoleId equals r.Id into rs
-                                from rResult in rs.DefaultIfEmpty()
-                                select new
-                                {
-                                    Id = u.Id,
-                                    FirstName = u.FirstName,
-                                    LastName = u.LastName,
-                                    Email = u.Email,
-                                    Role = rResult.Name,
-                                    PhoneNumber = u.PhoneNumber,
-                                    isEnabled = u.IsEnabled
-                                } 
+                    var user = await (from u in _context.Users
+                                      join ur in _context.UserRoles on u.Id equals ur.UserId into urs
+                                      from urResult in urs.DefaultIfEmpty()
+
+                                      join r in _context.Roles on urResult.RoleId equals r.Id into rs
+                                      from rResult in rs.DefaultIfEmpty()
+                                      select new
+                                      {
+                                          Id = u.Id,
+                                          FirstName = u.FirstName,
+                                          LastName = u.LastName,
+                                          Email = u.Email,
+                                          Role = rResult.Name,
+                                          PhoneNumber = u.PhoneNumber,
+                                          isEnabled = u.IsEnabled
+                                      }
                                 ).ToListAsync();
-                  
+
                     return Ok(new
                     {
                         data = user,
                         isSuccess = true
                     });
-                }else{
-                     return BadRequest(new
+                }
+                else
+                {
+                    return BadRequest(new
                     {
                         isSuccess = false
                     });
@@ -97,39 +99,39 @@ namespace HelpDeskApi.Controllers
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             IList<Claim> claim = identity.Claims.ToList();
             var userInfo = await _userManager.FindByEmailAsync(claim[1].Value);
-           
+
             try
             {
                 var user = await (from Role in _context.Roles
-                            join user_Role in _context.UserRoles
-                            on Role.Id equals user_Role.RoleId
-                            select new
-                            {
-                                UserId = user_Role.UserId,
-                                Role = Role.NormalizedName,
+                                  join user_Role in _context.UserRoles
+                                  on Role.Id equals user_Role.RoleId
+                                  select new
+                                  {
+                                      UserId = user_Role.UserId,
+                                      Role = Role.NormalizedName,
 
-                            } into intermediate
-                            join users in _context.Users.Where(t=> t.IsEnabled == 1)
-                            on intermediate.UserId equals users.Id
-                            select new
-                            {
-                                id = users.Id,
-                                FirstName = users.FirstName,
-                                LastName = users.LastName,
-                                Email = users.Email,
-                                UserName = users.UserName,
-                                Role = intermediate.Role,
-                                PhoneNumber = users.PhoneNumber,
-                            }
+                                  } into intermediate
+                                  join users in _context.Users.Where(t => t.IsEnabled == 1)
+                                  on intermediate.UserId equals users.Id
+                                  select new
+                                  {
+                                      id = users.Id,
+                                      FirstName = users.FirstName,
+                                      LastName = users.LastName,
+                                      Email = users.Email,
+                                      UserName = users.UserName,
+                                      Role = intermediate.Role,
+                                      PhoneNumber = users.PhoneNumber,
+                                  }
                             ).ToListAsync();
 
-                    
+
                 return Ok(new
                 {
                     data = user,
                     isSuccess = true
                 });
-             
+
             }
             catch (Exception ex)
             {
@@ -146,8 +148,8 @@ namespace HelpDeskApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult> EditUser(string id)
         {
-             var user = await _userManager.FindByIdAsync(id);
-           
+            var user = await _userManager.FindByIdAsync(id);
+
             try
             {
                 if (user != null)
@@ -205,19 +207,19 @@ namespace HelpDeskApi.Controllers
                     PhoneNumber = user.PhoneNumber,
                     Email = user.Email,
                     IsEnabled = user.IsEnabled
-                };     
+                };
 
-                  var newRole = user.NewRole;       
+                var newRole = user.NewRole;
 
                 var isCreated = await _userManager.CreateAsync(newUser, user.Password);
                 if (isCreated.Succeeded)
                 {
-                  
+
                     await _userManager.AddToRoleAsync(newUser, newRole);
                     return Ok(new
                     {
                         isSuccess = true,
-                    });   
+                    });
                 }
                 else
                 {
@@ -247,35 +249,39 @@ namespace HelpDeskApi.Controllers
 
             if (userInfo == null)
             {
-                 return BadRequest(new
+                return BadRequest(new
                 {
                     isSuccess = false
                 });
             }
             else
             {
-                var oldRoleName ="";
-                if(userRoles.Count()>0){
-                     oldRoleName = userRoles[0];
-                }else{
-                     oldRoleName = "";
+                var oldRoleName = "";
+                if (userRoles.Count() > 0)
+                {
+                    oldRoleName = userRoles[0];
+                }
+                else
+                {
+                    oldRoleName = "";
                 }
 
                 var newRole = user.NewRole;
 
-                if (oldRoleName != newRole && oldRoleName != null){
+                if (oldRoleName != newRole && oldRoleName != null)
+                {
                     var result = await _userManager.RemoveFromRolesAsync(userInfo, userRoles);
                     if (result.Succeeded)
                     {
-                        result = await _userManager.AddToRoleAsync(userInfo,newRole);   
-                    } 
+                        result = await _userManager.AddToRoleAsync(userInfo, newRole);
+                    }
                 }
-                
+
                 userInfo.FirstName = user.FirstName;
                 userInfo.LastName = user.LastName;
                 userInfo.PhoneNumber = user.PhoneNumber;
                 userInfo.IsEnabled = user.IsEnabled;
-               
+
                 try
                 {
                     await _userManager.UpdateAsync(userInfo);
@@ -297,7 +303,7 @@ namespace HelpDeskApi.Controllers
             }
         }
 
-     
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(string id)
@@ -307,7 +313,7 @@ namespace HelpDeskApi.Controllers
                 var user = await _userManager.FindByIdAsync(id);
                 if (user == null)
                 {
-                    
+
                     return Ok(new
                     {
                         message = "Data is Null.",
@@ -315,8 +321,8 @@ namespace HelpDeskApi.Controllers
                     });
                 }
                 else
-                { 
-                   var result = await _userManager.DeleteAsync(user);
+                {
+                    var result = await _userManager.DeleteAsync(user);
                     return Ok(new
                     {
                         data = result,
@@ -340,21 +346,21 @@ namespace HelpDeskApi.Controllers
         {
             try
             {
-                
-           
+
+
                 var userInfo = await _userManager.FindByIdAsync(user.Id);
 
                 var token = await _userManager.GeneratePasswordResetTokenAsync(userInfo);
-                var isSuccess =   await _userManager.ResetPasswordAsync(userInfo, token,user.PasswordNew);
-               
+                var isSuccess = await _userManager.ResetPasswordAsync(userInfo, token, user.PasswordNew);
+
                 /*
                 EmailHelper emailHelper = new EmailHelper();
                 bool emailResponse = emailHelper.SendEmail(user.Email, confirmationLink);
                 */
-                
+
                 if (isSuccess.Succeeded)
                 {
-                    return Ok(new 
+                    return Ok(new
                     {
                         data = user,
                         isSuccess = true
@@ -362,13 +368,13 @@ namespace HelpDeskApi.Controllers
                 }
                 else
                 {
-                   
-                    return BadRequest(new 
+
+                    return BadRequest(new
                     {
                         Errors = isSuccess.Errors.Select(x => x.Description).ToList(),
                         Success = false
                     });
-                    
+
                 }
             }
             catch (Exception)
@@ -424,6 +430,6 @@ namespace HelpDeskApi.Controllers
 
             return password.ToString();
         }
-        
+
     }
 }
